@@ -14,8 +14,8 @@ namespace UkadTestTask.Scanning
         }
 
         public string Url { get; set; }
-        public int LoadTimeMs { get; set; }
-        public int Ping { get; set; }
+        public long LoadTimeMs { get; set; }        
         public bool Completed { get; set; }
+        public long Lenght { get; set; }
     }
 }

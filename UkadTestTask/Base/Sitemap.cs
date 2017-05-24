@@ -14,7 +14,7 @@ namespace UkadTestTask.Base
     public class Sitemap
     {
         public string Url { get; private set; }
-        public List<ScannableUrl> Urls { get; private set; }
+        public List<ScannableUrl> Urls { get; set; }
 
         public Sitemap(string url, List<ScannableUrl> urls)
         {

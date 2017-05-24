@@ -39,10 +39,9 @@ namespace UkadTestTask.Base
         }
 
         private List<Sitemap> GetUrlsFromSitemaps(List<Sitemap> list)
-        {
-            List<Sitemap> result = new List<Sitemap>();
-            list.ForEach(r => result.Add(new Sitemap(r.Url, GetUrlsFromSitemap(r.Url))));            
-            return result;
+        {            
+            list.ForEach(r => r.Urls = GetUrlsFromSitemap(r.Url));            
+            return list;
         }
 
         private List<ScannableUrl> GetUrlsFromSitemap(string sitemapUrl)
