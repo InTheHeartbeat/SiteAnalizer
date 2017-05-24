@@ -1,7 +1,9 @@
-﻿namespace UkadTestTask.Base.Interfaces
+﻿using System.Collections.Generic;
+
+namespace UkadTestTask.Base.Interfaces
 {
     interface ISitemapProvider
     {
-        Sitemap GetSitemapFromUrl(string url);
+        List<Sitemap> GetSitemapsFromUrl(string url);
     }
 }

@@ -8,63 +8,60 @@ using System.Xml;
 using System.Xml.Linq;
 using UkadTestTask.Base.Interfaces;
 using UkadTestTask.Scanning;
+using WebGrease.Css.Extensions;
 
 namespace UkadTestTask.Base
 {
     public class SitemapProvider : ISitemapProvider
-    {
-        private ScannableUrl _requestUri = null;
-
-        public Sitemap GetSitemapFromUrl(string url)
+    {        
+        public List<Sitemap> GetSitemapsFromUrl(string url)
         {
-            _requestUri = new ScannableUrl(url);
-            return CreateFromXml(GetXmlDocument(url));
-        }
+            List<Sitemap> result = new List<Sitemap>();
 
-        private Sitemap CreateFromXml(XDocument xmlDocument)
-        {
-            Sitemap result = new Sitemap();
+            XDocument xmlDocument = GetXmlDocument(url);
 
             if (xmlDocument.Root != null && xmlDocument.Root.Name.LocalName == "sitemapindex")
             {
-                result.RootUris.AddRange(
+                result.AddRange(
                     xmlDocument.Root
                         .Elements(XName.Get("sitemap", xmlDocument.Root.Name.NamespaceName))
                         .Elements(XName.Get("loc", xmlDocument.Root.Name.NamespaceName))
-                        .Select(el => new ScannableUrl(el.Value))
+                        .Select(el => new Sitemap(el.Value))
                 );
-
-                foreach (ScannableUrl rootUri in result.RootUris)
-                {
-                    XDocument subDoc = GetXmlDocument(rootUri.Url);
-                    if (subDoc.Root == null)
-                        break;
-
-                    if (subDoc.Root.Name.LocalName != "urlset")
-                        throw new Exception("Что-то пошло не так..");
-
-                    List<ScannableUrl> temp = new List<ScannableUrl>();
-                    temp.AddRange(subDoc.Root
-                        .Elements(XName.Get("url", subDoc.Root.Name.NamespaceName))
-                        .Elements(XName.Get("loc", subDoc.Root.Name.NamespaceName))
-                        .Select(el => new ScannableUrl(el.Value)));
-
-                    result.Uris.Add(rootUri, temp);
-                }
+                result = GetUrlsFromSitemaps(result);
             }
             else if (xmlDocument.Root != null && xmlDocument.Root.Name.LocalName == "urlset")
             {
-                List<ScannableUrl> temp = new List<ScannableUrl>();
-                temp.AddRange(xmlDocument.Root
-                    .Elements(XName.Get("url", xmlDocument.Root.Name.NamespaceName))
-                    .Elements(XName.Get("loc", xmlDocument.Root.Name.NamespaceName))
-                    .Select(el => new ScannableUrl(el.Value)));
-                
-                result.Uris.Add(_requestUri, temp);
-                result.RootUris.Add(_requestUri);
+                result.Add(new Sitemap(url, GetUrlsFromSitemap(url)));
             }
+                
             return result;
         }
+
+        private List<Sitemap> GetUrlsFromSitemaps(List<Sitemap> list)
+        {
+            List<Sitemap> result = new List<Sitemap>();
+            list.ForEach(r => result.Add(new Sitemap(r.Url, GetUrlsFromSitemap(r.Url))));            
+            return result;
+        }
+
+        private List<ScannableUrl> GetUrlsFromSitemap(string sitemapUrl)
+        {
+            List<ScannableUrl> result = new List<ScannableUrl>();
+
+            XDocument xmlDocument = GetXmlDocument(sitemapUrl);
+            if (xmlDocument.Root == null)
+                return result;
+
+            if (xmlDocument.Root.Name.LocalName != "urlset")
+                throw new Exception("Что-то пошло не так..");
+            
+            result.AddRange(xmlDocument.Root
+                .Elements(XName.Get("url", xmlDocument.Root.Name.NamespaceName))
+                .Elements(XName.Get("loc", xmlDocument.Root.Name.NamespaceName))
+                .Select(el => new ScannableUrl(el.Value)));
+            return result;
+        }        
 
         private XDocument GetXmlDocument(string url)
         {
