@@ -10,6 +10,7 @@ using WebGrease.Css.Extensions;
 
 namespace UkadTestTask.Base
 {
+    [Serializable]
     public class Sitemap
     {
         public string Url { get; private set; }
@@ -19,6 +20,11 @@ namespace UkadTestTask.Base
         {
             Url = url;
             Urls = urls;            
-        }        
+        }
+
+        public Sitemap(string url)
+        {
+            Url = url;
+        }
     }
 }
