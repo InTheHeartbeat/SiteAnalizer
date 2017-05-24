@@ -5,6 +5,7 @@ using System.Web;
 
 namespace UkadTestTask.Scanning
 {
+    [Serializable]
     public class ScannableUrl
     {
         public string Url { get; set; }
