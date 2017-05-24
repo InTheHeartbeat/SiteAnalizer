@@ -58,8 +58,9 @@ namespace UkadTestTask.Base
                     .Elements(XName.Get("url", xmlDocument.Root.Name.NamespaceName))
                     .Elements(XName.Get("loc", xmlDocument.Root.Name.NamespaceName))
                     .Select(el => new Uri(el.Value)));
-
+                
                 result.Uris.Add(_requestUri, temp);
+                result.RootUris.Add(_requestUri);
             }
             return result;
         }

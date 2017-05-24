@@ -1,4 +1,49 @@
-﻿@{
+﻿@model UkadTestTask.Models.MainModel
+@{
     ViewBag.Title = "Home Page";
 }
+
+@using (Ajax.BeginForm("HandleUrl", "Home", new AjaxOptions {UpdateTargetId = "infographics-panel-container", OnComplete = "LoadComplete()" }))
+{
+    <div class="input-group input-group-lg">
+        <span class="input-group-addon" id="sizing-addon1"><b>http://</b></span>
+        <input id="input-url" type="text" class="form-control" placeholder="Enter youre URL here" aria-describedby="sizing-addon1" name="Url" value="@Model.Url">
+        <span class="input-group-btn">
+            <button id="start-handle-button" class="btn btn-default" type="submit"><b>Go!</b></button>
+        </span>
+    </div>
+    <div id="infographics-panel">
+        <div id="infographics-panel-container"></div>
+    </div>
+}
+<div id="main-desc">  
+    <div id="desc-1-container">
+        <h1 id="desc-1">
+            This web service gives you the opportunity to check the performance of your website based on the site map
+        </h1>
+    </div>
+    <div id="load-bar-1">            
+        <div class="space">
+            <div class="ship">
+                <div class="ship-rotate">
+                    <div class="pod"></div>
+                    <div class="fuselage"></div>
+                </div>
+            </div>
+            <div class="ship-shadow"></div>
+            <div class="mars">
+                <div class="tentacle"></div>
+                <div class="flag">
+                    <div class="small-tentacle"></div>
+                </div>
+                <div class="planet">
+                    <div class="surface"></div>
+                    <div class="crater1"></div>
+                    <div class="crater2"></div>
+                    <div class="crater3"></div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
 
