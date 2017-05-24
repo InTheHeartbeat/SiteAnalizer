@@ -8,6 +8,11 @@ namespace UkadTestTask.Scanning
     [Serializable]
     public class ScannableUrl
     {
+        public ScannableUrl(string url)
+        {
+            Url = url;
+        }
+
         public string Url { get; set; }
         public int LoadTimeMs { get; set; }
         public int Ping { get; set; }

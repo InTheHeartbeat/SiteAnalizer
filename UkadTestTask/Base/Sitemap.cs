@@ -5,19 +5,20 @@ using System.Web;
 using System.Web.WebSockets;
 using System.Xml;
 using System.Xml.Linq;
+using UkadTestTask.Scanning;
 using WebGrease.Css.Extensions;
 
 namespace UkadTestTask.Base
 {
     public class Sitemap
     {
-        public List<Uri> RootUris { get; private set; }
-        public Dictionary<Uri,List<Uri>> Uris { get; private set; }
+        public string Url { get; private set; }
+        public List<ScannableUrl> Urls { get; private set; }
 
-        public Sitemap()
+        public Sitemap(string url, List<ScannableUrl> urls)
         {
-            Uris = new Dictionary<Uri, List<Uri>>();
-            RootUris = new List<Uri>();
+            Url = url;
+            Urls = urls;            
         }        
     }
 }

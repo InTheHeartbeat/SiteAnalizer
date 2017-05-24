@@ -7,16 +7,17 @@ using System.Web;
 using System.Xml;
 using System.Xml.Linq;
 using UkadTestTask.Base.Interfaces;
+using UkadTestTask.Scanning;
 
 namespace UkadTestTask.Base
 {
     public class SitemapProvider : ISitemapProvider
     {
-        private Uri _requestUri = null;
+        private ScannableUrl _requestUri = null;
 
         public Sitemap GetSitemapFromUrl(string url)
         {
-            _requestUri = new Uri(url);
+            _requestUri = new ScannableUrl(url);
             return CreateFromXml(GetXmlDocument(url));
         }
 
@@ -30,34 +31,34 @@ namespace UkadTestTask.Base
                     xmlDocument.Root
                         .Elements(XName.Get("sitemap", xmlDocument.Root.Name.NamespaceName))
                         .Elements(XName.Get("loc", xmlDocument.Root.Name.NamespaceName))
-                        .Select(el => new Uri(el.Value))
+                        .Select(el => new ScannableUrl(el.Value))
                 );
 
-                foreach (Uri rootUri in result.RootUris)
+                foreach (ScannableUrl rootUri in result.RootUris)
                 {
-                    XDocument subDoc = GetXmlDocument(rootUri.AbsoluteUri);
+                    XDocument subDoc = GetXmlDocument(rootUri.Url);
                     if (subDoc.Root == null)
                         break;
 
                     if (subDoc.Root.Name.LocalName != "urlset")
                         throw new Exception("Что-то пошло не так..");
 
-                    List<Uri> temp = new List<Uri>();
+                    List<ScannableUrl> temp = new List<ScannableUrl>();
                     temp.AddRange(subDoc.Root
                         .Elements(XName.Get("url", subDoc.Root.Name.NamespaceName))
                         .Elements(XName.Get("loc", subDoc.Root.Name.NamespaceName))
-                        .Select(el => new Uri(el.Value)));
+                        .Select(el => new ScannableUrl(el.Value)));
 
                     result.Uris.Add(rootUri, temp);
                 }
             }
             else if (xmlDocument.Root != null && xmlDocument.Root.Name.LocalName == "urlset")
             {
-                List<Uri> temp = new List<Uri>();
+                List<ScannableUrl> temp = new List<ScannableUrl>();
                 temp.AddRange(xmlDocument.Root
                     .Elements(XName.Get("url", xmlDocument.Root.Name.NamespaceName))
                     .Elements(XName.Get("loc", xmlDocument.Root.Name.NamespaceName))
-                    .Select(el => new Uri(el.Value)));
+                    .Select(el => new ScannableUrl(el.Value)));
                 
                 result.Uris.Add(_requestUri, temp);
                 result.RootUris.Add(_requestUri);
