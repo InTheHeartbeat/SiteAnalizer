@@ -14,18 +14,43 @@ namespace UkadTestTask.Scanning
         [XmlIgnore]
         private BackgroundWorker _scanningWorker;
 
+        public WebSite Site { get; private set; }
 
         [XmlIgnore]
-        public bool SitemapLoaded => Sitemap != null && Sitemap.RootUris.Count > 0 && Sitemap.Uris.Count > 0;
-        [XmlIgnore]
-        public bool SiteScanned => Sitemap != null && Sitemap.Uris != null && Sitemap.Uris.
+        public bool SiteScanned => 
+            Site != null 
+            && Site.SitemapLoaded
+            && Site.Sitemaps.All(t => t.Urls.All(u => u.Completed));
 
         [XmlIgnore]
-        public bool Completed => SiteScanned && SitemapLoaded;
+        public bool Completed => SiteScanned;
+
+        [XmlIgnore]
+        public bool IsRunning => _scanningWorker.IsBusy;
 
         public SiteScanTask()
+        { }
+        public SiteScanTask(WebSite site)
         {
-                
+            Site = site;
+        }        
+
+        public void Run()
+        {
+            if(Site == null)
+                throw new ArgumentNullException($"Web site is null");
+            if(string.IsNullOrWhiteSpace(Site.Url))
+                throw new ArgumentNullException($"Web site url is null or empty");
+
+            _scanningWorker = new BackgroundWorker() {WorkerSupportsCancellation = true};
+            _scanningWorker.DoWork += ScanWork;
+            _scanningWorker.RunWorkerAsync();
+        }
+
+        private void ScanWork(object sender, DoWorkEventArgs e)
+        {
+            if (!Site.SitemapLoaded)
+                Site.Sitemaps = (new SitemapProvider()).GetSitemapsFromUrl(Site.Url);
         }
     }
 }
