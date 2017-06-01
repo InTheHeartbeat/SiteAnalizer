@@ -13,10 +13,10 @@ namespace UkadTestTask.Base
     [Serializable]
     public class Sitemap
     {
-        public string Url { get; private set; }
-        public List<ScannableUrl> Urls { get; set; }
+        public string Url { get; set; }
+        public List<SitemapUrl> Urls { get; set; }
 
-        public Sitemap(string url, List<ScannableUrl> urls)
+        public Sitemap(string url, List<SitemapUrl> urls)
         {
             Url = url;
             Urls = urls;            
@@ -26,5 +26,8 @@ namespace UkadTestTask.Base
         {
             Url = url;
         }
+
+        public Sitemap()
+        { }
     }
 }

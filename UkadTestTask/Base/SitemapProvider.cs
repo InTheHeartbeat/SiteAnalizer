@@ -44,9 +44,9 @@ namespace UkadTestTask.Base
             return list;
         }
 
-        private List<ScannableUrl> GetUrlsFromSitemap(string sitemapUrl)
+        private List<SitemapUrl> GetUrlsFromSitemap(string sitemapUrl)
         {
-            List<ScannableUrl> result = new List<ScannableUrl>();
+            List<SitemapUrl> result = new List<SitemapUrl>();
 
             XDocument xmlDocument = GetXmlDocument(sitemapUrl);
             if (xmlDocument.Root == null)
@@ -58,7 +58,7 @@ namespace UkadTestTask.Base
             result.AddRange(xmlDocument.Root
                 .Elements(XName.Get("url", xmlDocument.Root.Name.NamespaceName))
                 .Elements(XName.Get("loc", xmlDocument.Root.Name.NamespaceName))
-                .Select(el => new ScannableUrl(el.Value)));
+                .Select(el => new SitemapUrl(el.Value)));
             return result;
         }        
 
