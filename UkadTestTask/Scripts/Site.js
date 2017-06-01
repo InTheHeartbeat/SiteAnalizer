@@ -1,46 +1,49 @@
 ﻿var isLoadAnimCompleted = false;
-
-function ShowInfographicsPanel() {
-    $("#infographics-panel").css("top", "15%");
-}
-
-function HideInfographicsPanel() {
-    $("#infographics-panel").css("top", "100%");
-}
-
+var intervalId;
+var ssss;
 function LoadComplete() {
-    setTimeout(function() {
-        //$("body").animate({ backgroundColor: "#0072c6" }, 600);
-        $("#load-bar-1").animate({ left: "-200%" }, 700);
-        setTimeout(function() {
-                $("#load-bar-1").hide();
-                ShowInfographicsPanel();
-            },
-            700);
-    }, (isLoadAnimCompleted === true ? 0 : 2800));    
+    //$("body").animate({ backgroundColor: "#0072c6" }, 600);
+    clearInterval(intervalId);
+    $("#load-bar-1").animate({ left: "-200%" }, 700, function() { $("#load-bar-1").hide(); });
 }
 
 $(document).ready(function() {
     $("#start-handle-button").click(function() {
-        
         isLoadAnimCompleted = false;
-        $("#desc-1-container").css("left", "100%");
+        $("#desc-1").animate({"margin-left": "250%" }, 1000, "swing" );
+        $("#desc-2").animate({ "margin-left": "-250%" }, 1000, "swing");
         $("body").animate({ backgroundColor: "#435d70" }, 1000);
         $("#load-bar-1").fadeOut();
         setTimeout(function() { $("#load-bar-1").show().animate({ left: "0" }, 700) }, 1000);
-        $("#main-progress-bar-step-1").animate({ width: "33.333%" }, 2700, function() { isLoadAnimCompleted = true; });
+        $("#main-progress-bar-step-1").animate({ width: "33.333%" }, 2700, function () { isLoadAnimCompleted = true; });
+        $(".navbar").removeClass("navbar-default");
+        $(".navbar").addClass("navbar-inverse");
+
+        $("#input-group-url").addClass("progress");
+        $("#input-group-url").find("input").addClass("progress-bar");
+        $("#input-group-url").find("input").css("width", "100%");
+        
+        var base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
+        var url = $("#input-group-url").find("input").val();
+        var encodedString = base64.encode(url);
+
+        intervalId = setInterval(function () {            
+            $.get('api/StateProvider/GetState/' + encodedString, function (data) {
+                $("#status").html(data.scannedAddresses + "/"+data.totalAddresses);
+            });            
+        },1000);
     });
 
-    $("#form0").on("submit",
-        function() {
-            $("#input-url").prop("readonly", true);
-            $("#start-handle-button").prop("disabled",true);
+    $('html').on('click',
+        '.input-group button',
+        function () {            
+            //$(this).prop("disabled", "true");
+            //$(this).parent().parent(".input-group").find("input").prop("disabled", "true");
         });
-    $("#horizontal-indicators-container").jPages({
-        containerID: "tbody",
-        previous: "←",
-        next: "→",
-        perPage: 200,
-        delay: 20
-    });
+
+    $("#completedLink").on('click',       
+        function () {
+            $(".navbar").removeClass("navbar-default");
+            $(".navbar").addClass("navbar-inverse");
+        });
 });

@@ -5,85 +5,157 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Serialization;
 using UkadTestTask.Base;
+using UkadTestTask.Scanning.Interfaces;
+using WebGrease.Css.Extensions;
 
 namespace UkadTestTask.Scanning
-{
-    [Serializable]
-    public class SiteScanTask
+{    
+    public class SiteScanTask : ISiteScanTask
     {
-        [XmlIgnore]
-        private BackgroundWorker _scanningWorker;
+        /// <summary>
+        /// Current scanning web site
+        /// </summary>
+        public WebSite Site { get; set; }        
 
-        public WebSite Site { get; private set; }
+        /// <summary>
+        /// Result state after scanning
+        /// </summary>
+        public ScanResult ResultState { get; private set; }
+        
+        /// <summary>
+        /// Current state
+        /// </summary>
+        public ScanState State { get; private set; }
 
-        [XmlIgnore]
-        public bool SiteScanned => 
-            Site != null 
-            && Site.SitemapLoaded
-            && Site.Sitemaps.All(t => t.Urls.All(u => u.Completed));
+        /// <summary>
+        /// Occurs when call method Stop(), but not at the actual stop.
+        /// </summary>
+        public event Action Stopped;
+        /// <summary>
+        /// Occurs when scanning is begun
+        /// </summary>
+        public event Action Started;
+        /// <summary>
+        /// Return true if site successful scanned
+        /// </summary>       
+        public bool Completed => Site != null
+                                 && Site.Sitemaps.All(t => t.Urls.All(u => u.Completed));
 
-        [XmlIgnore]
-        public bool Completed => SiteScanned;
+        private bool _cancelationPending;
 
-        [XmlIgnore]
-        public bool IsRunning => _scanningWorker.IsBusy;
-
-        public SiteScanTask()
-        { }
         public SiteScanTask(WebSite site)
         {
             Site = site;
-        }        
-
-        public void Run()
-        {
-            if(Site == null)
-                throw new ArgumentNullException($"Web site is null");
-            if(string.IsNullOrWhiteSpace(Site.Url))
-                throw new ArgumentNullException($"Web site url is null or empty");
-
-            _scanningWorker = new BackgroundWorker() {WorkerSupportsCancellation = true};
-            _scanningWorker.DoWork += ScanWork;
-            _scanningWorker.RunWorkerAsync();
+            State = new ScanState();            
+            ResultState = new ScanResult();
+            _cancelationPending = false;            
         }
 
-        private void ScanWork(object sender, DoWorkEventArgs e)
+        /// <summary>
+        /// Start scanning
+        /// </summary>
+        public void Scan()
         {
-            if (!Site.SitemapLoaded)
-                Site.Sitemaps = (new SitemapProvider()).GetSitemapsFromUrl(Site.Url);
+            if (Site == null)
+                throw new NullReferenceException($"Web site is null");
+            if (string.IsNullOrWhiteSpace(Site.Url))
+                throw new NullReferenceException($"Web site url is null or empty");
 
+            ScanTask();
+        }
+
+        private async Task ScanTask()
+        {                     
+            State.ProccessState = ScanProccessState.Scanning;            
+            OnStarted();
+
+            if (!Site.SitemapLoaded)
+                LoadSitemap();
+                                  
+            Stopwatch scanningTotalTimeSpent = Stopwatch.StartNew();
             foreach (Sitemap sitemap in Site.Sitemaps)
             {
-                foreach (ScannableUrl notScannedUrl in sitemap.Urls.Where(u=>!u.Completed))
+                foreach (SitemapUrl notScannedUrl in sitemap.Urls.Where(u => !u.Completed))
                 {
-                    ScannableUrl scannedUrl = InterviewUrl(notScannedUrl);
-                    notScannedUrl.LoadTimeMs = scannedUrl.LoadTimeMs;
-                    notScannedUrl.Lenght = scannedUrl.Lenght;                    
+                    if (_cancelationPending)                                            
+                        return;                    
+
+                    State.TextState = "Scanning address " + notScannedUrl.Url + "(" + State.ScannedAddresses + 1 + "/" +
+                                      State.TotalAddresses + ")";
+
+                    SitemapUrl scannedUrl = InterviewUrl(notScannedUrl);
+                    notScannedUrl.LoadTime = scannedUrl.LoadTime;
+                    notScannedUrl.Lenght = scannedUrl.Lenght;
                     notScannedUrl.Completed = true;
-                    if (_scanningWorker.CancellationPending) return;
+
+                    ResultState.ScannedAddresses = ++State.ScannedAddresses;                                        
                 }
-            }                                
+                ResultState.ScannedSitemaps = ++State.ScannedSitemaps;
+            }
+            scanningTotalTimeSpent.Stop();
+            ResultState.TotalTimeSpentScanning = scanningTotalTimeSpent.Elapsed;
+
+            Site.Sitemaps.ForEach(sm => ResultState.PageLoadedMinTime = TimeSpan.FromMilliseconds(sm.Urls.Min(t => t.LoadTime.Milliseconds)));
+            Site.Sitemaps.ForEach(sm => ResultState.PageLoadedMaxTime = TimeSpan.FromMilliseconds(sm.Urls.Max(t => t.LoadTime.Milliseconds)));
+            Site.Sitemaps.ForEach(sm => ResultState.PageLoadedMiddleTime = TimeSpan.FromMilliseconds(sm.Urls.Average(t => t.LoadTime.Milliseconds)));            
         }
 
-        private ScannableUrl InterviewUrl(ScannableUrl url)
+        private void LoadSitemap()
         {
-            using (var client = new HttpClient {BaseAddress = new Uri(url.Url)})
+            State.TextState = "Loading sitemap";
+
+            Stopwatch siteMapLoadTime = Stopwatch.StartNew();
+            Site.Sitemaps = (new SitemapProvider()).GetSitemapsFromUrl(Site.Url);
+            siteMapLoadTime.Stop();
+
+            ResultState.SitemapLoadedTime = siteMapLoadTime.Elapsed;
+            ResultState.SitemapLoaded = State.SitemapLoaded = Site.SitemapLoaded;
+            ResultState.TotalSitemaps = State.TotalSitemaps = Site.Sitemaps.Count;
+            Site.Sitemaps.ForEach(t => ResultState.TotalAddresses = State.TotalAddresses += t.Urls.Count);
+            // TODO try catch
+        }
+
+        private SitemapUrl InterviewUrl(SitemapUrl url)
+        {
+            using (HttpClient client = new HttpClient {BaseAddress = new Uri(url.Url)})
             {
                 Stopwatch sw = Stopwatch.StartNew();
-                string result = client.GetStringAsync("").Result;
-                sw.Stop();
-                url.LoadTimeMs = sw.ElapsedMilliseconds;
-                url.Lenght = result.Length;
+                try
+                {
+                    string result = client.GetStringAsync("").Result;
+                    sw.Stop();
+                    url.LoadTime = sw.Elapsed;
+                    url.Lenght = result.Length;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    url.Lenght = 0;
+                    url.LoadTime = TimeSpan.Zero;
+                }
                 return url;
             }
         }
 
         public void Stop()
         {
-            throw new NotImplementedException();
+            _cancelationPending = true;
+            OnStopped();
+        }
+
+
+        protected virtual void OnStopped()
+        {
+            Stopped?.Invoke();
+        }
+
+        protected virtual void OnStarted()
+        {
+            Started?.Invoke();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿html,body, .body-content { height: 100%; width: 100%; overflow: hidden; }
-body { background-color: #0072c6; }
+body { background-color: #0091EA; }
 #main-progress-bar { height: 0.4em; box-shadow: 0 1px 5px 1px black;}
+
 #input-url{box-shadow: 1px 3px 5px 0px #575555 inset; border:none;}
 #input-url::-webkit-input-placeholder       {text-indent: 0px;   transition: text-indent 0.9s ease;}
 #input-url::-moz-placeholder                {text-indent: 0px;   transition: text-indent 0.9s ease;}
@@ -11,29 +12,111 @@ body { background-color: #0072c6; }
 #input-url:focus:-moz-placeholder           {text-indent: 70em; transition: text-indent 0.9s ease;}
 #input-url:focus:-ms-input-placeholder      {text-indent: 70em; transition: text-indent 0.9s ease;}
 svg, svg:not(:root) { overflow: visible;}
-#main-desc  {
-    width: 70%;
-    text-align: center;
-    margin: 0 auto;
-    margin-top: 10em;
+
+.input-group { margin-bottom: 3em;}
+.input-group > :first-child { 
+    border-top-left-radius: 6% !important;
+    border-bottom-left-radius: 6% !important;
+}
+.input-group :last-child > button {
+    border-top-right-radius: 6% !important;
+    border-bottom-right-radius: 6% !important;
 }
 
-#desc-1-container {
-    position: absolute;
-    left: 0;
-    right: 0;
-    width: 70%;
-    margin: 0 auto;
-    transition: all 0.7s ease-out;
+
+.inf-cells-container {
+    display: flex;
 }
-#desc-1-container h1 {
+.infographics-cell {
+    max-width: 327px;
+    width: 24%;
+    height: 16em;
+    background: #222;
+    margin: 1em auto;        
+    float: left;    
+}
+.inf-block-header {
+    width: 100%;
+    height: 2em;
+    background-color: #313131;
+    color: white;
+    text-align: center;
+    position: relative;
+}
+.inf-block-header h4 { margin: 0; position: absolute; left: 0;right: 0;top: 50%;margin-top: -0.625em;}
+/*
+.input-group:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    top: 4.8em;
+    z-index: 99999999999;
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 100%;
+    left: 50%;
+    right: 50%;
+}
+
+.input-group:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 3.7em;
+    z-index: 99999999999;
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 100%;
+    left: 50%;
+    right: 50%;
+}
+*/
+#btn-add-input > button{
+    
+    border-radius: 6%;
+    float: right;
+    margin-top: -2.5em;
+}
+#main-desc  {
+    width: 95%;
+    height: 70%;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 7em;
+}
+
+#desc-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    margin: 0 auto;    
+}
+#desc-container h1 {
     display: inline-block;
-    text-shadow: 1px 1px 1px steelblue,
-                 1px -1px 1px steelblue,
-                 -1px 1px 1px steelblue,
-                 -1px -1px 1px steelblue;
+    text-shadow: 1px 1px 4px black;                 
     color: white;
     transition: all 1s;
+    margin-bottom: 2em;
+    white-space: nowrap;    
+}
+
+.navbar { transition: all 1s ease-in;border-radius: 0;}
+.navbar * { transition: all 1s ease-in;}
+
+.navbar-nav > li {
+    text-align: center;
+    text-transform:uppercase;
+    float: none;
+    display: inline-block;
+}
+
+.navbar-nav {
+    width: 70%;
+    text-align: center;
+}
+.navbar-nav > li {
+    float: none;
+    display: inline-block;
 }
 
 #infographics-panel {

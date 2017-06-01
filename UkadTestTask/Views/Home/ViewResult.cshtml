@@ -1,0 +1,66 @@
+﻿@model UkadTestTask.Models.ResultDataModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "../Shared/_Layout.cshtml";    
+}
+@section Styles{
+    <link rel="Stylesheet" href="@Href("~/Content/Site.css")" />
+    <link rel="Stylesheet" href="@Href("~/Content/ResultViewStyle.css")" />
+}
+
+<script type="text/javascript">
+    $(".navbar").removeClass("navbar-default");
+    $(".navbar").addClass("navbar-inverse");
+</script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="inf-cells-container">
+            <div id="inf-block-site-ping" class="infographics-cell">
+                <div class="inf-block-header">
+                    <h4>Ping</h4>
+                </div>
+                <h3>@Model.Result.SiteResponseTime.Milliseconds</h3>
+            </div>
+            <div class="infographics-cell">
+                <div class="inf-block-header"></div>
+            </div>
+            <div class="infographics-cell">
+                <div class="inf-block-header"></div>
+            </div>
+            <div class="infographics-cell">
+                <div class="inf-block-header"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="inf-cells-container">
+            <div class="infographics-cell"></div>
+            <div class="infographics-cell"></div>
+            <div class="infographics-cell"></div>
+            <div class="infographics-cell"></div>
+        </div>
+    </div>
+</div>
+
+<div style="overflow: scroll; color: white;">
+    <h5>Scanned URL: @Model.Site.Url</h5>
+    <h5>PageLoadedMaxTime: @Model.Result.PageLoadedMaxTime.Milliseconds</h5>
+    <h5>PageLoadedMiddleTime: @Model.Result.PageLoadedMiddleTime.Milliseconds</h5>
+    <h5>PageLoadedMinTime: @Model.Result.PageLoadedMinTime.Milliseconds</h5>
+    <br/>
+    <h5>SitemapLoadedTime: @Model.Result.SitemapLoadedTime.Milliseconds</h5>
+    <br/>
+    <h5>TotalTimeSpentScanning (minutes): @Model.Result.TotalTimeSpentScanning.Minutes</h5>
+    <br />
+    <h5>TotalSitemaps: @Model.Result.TotalSitemaps</h5>
+    <h5>ScannedSitemaps: @Model.Result.ScannedSitemaps</h5>
+    <br/>
+    <h5>TotalAddresses: @Model.Result.TotalAddresses</h5>
+    <h5>ScannedAddresses: @Model.Result.ScannedAddresses</h5>
+</div>
+
+
+<style>
+    body{ background-color: #435d70;}
+</style>

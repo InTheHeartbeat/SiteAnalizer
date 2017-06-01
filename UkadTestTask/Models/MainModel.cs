@@ -8,10 +8,10 @@ namespace UkadTestTask.Models
     public class MainModel
     {
         public string Url { get; set; }
-
+        public bool Completed { get; set; }
+       
         public MainModel()
-        {
-            Url=String.Empty;
-        }
+        {            
+        }        
     }
 }

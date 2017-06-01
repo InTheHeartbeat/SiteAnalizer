@@ -28,8 +28,7 @@ namespace UkadTestTask
                       "~/Scripts/jquery.gauge.js",
                       "~/Scripts/jPages.min.js"));
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css",
+                      "~/Content/bootstrap.css",                      
                       "~/Content/jPages.css"));
         }
     }

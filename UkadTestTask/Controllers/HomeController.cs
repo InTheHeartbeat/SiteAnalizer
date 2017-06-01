@@ -1,27 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Remoting.Messaging;
+using System.Security.Policy;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using UkadTestTask.Base;
 using UkadTestTask.Models;
+using UkadTestTask.Scanning;
 
 namespace UkadTestTask.Controllers
 {
     public class HomeController : Controller
     {
+        private MainModel _currentModel;
+
         public ActionResult Index()
         {
-            return View(new MainModel());
+            if (_currentModel == null)
+                _currentModel = new MainModel();
+            return View(_currentModel);
         }
 
-        [HttpPost]
-        public ActionResult HandleUrl(MainModel asd)
+        [HttpPost]        
+        public ActionResult HandleUrl(MainModel model)
         {
-           /* DateTime from = DateTime.Now;
-            Sitemap sitemap = (new SitemapProvider()).GetSitemapFromUrl(asd.Url);            
-            return PartialView("ResultDataPartialView", new ResultDataModel(sitemap, DateTime.Now.Subtract(from).Milliseconds));*/
-            throw new NotImplementedException();
+            _currentModel = model;
+            
+            ScannerProvider.Scanner.ScanSite(model.Url, false);
+            model.Completed = true;               
+            return PartialView("UrlInputBlock", _currentModel);          
         }
-    }
+
+        public ActionResult ViewResult(string url)
+        {
+            SiteScanTask task = ScannerProvider.Scanner.ScanTasks.FirstOrDefault(s => s.Site.Url == url);
+            return View("ViewResult",new ResultDataModel(task.Site, task.ResultState));
+        }
+    }    
 }

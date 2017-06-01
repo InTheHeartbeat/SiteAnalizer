@@ -1,0 +1,14 @@
+﻿@model UkadTestTask.Models.MainModel
+<div id="input-group-url" class="input-group input-group-lg">
+    <span class="input-group-addon" id="basic-addon">http://</span>
+    @Html.TextBoxFor(t => Model.Url, new {@class = "form-control", placeholder = "Enter youre URL here", type = "text", aria_describedby = "basic-addon"})    
+    <span class="input-group-btn">
+        <button id="start-handle-button" class="btn btn-default" type="submit" name="url-form-action" value="scan-url">Go!</button>
+    </span>
+</div>
+<div id="status"></div>
+@if (Model.Completed)
+{
+    @Html.ActionLink("Completed!", "ViewResult", new {url=Model.Url}, new {id = "completedLink"})
+    <h1>Completed!</h1>
+}
