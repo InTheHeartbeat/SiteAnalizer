@@ -1,7 +1,6 @@
 ﻿@model UkadTestTask.Models.ResultDataModel
 @{
-    ViewBag.Title = "Index";
-    Layout = "../Shared/_Layout.cshtml";    
+    ViewBag.Title = "Index";       
 }
 @section Styles{
     <link rel="Stylesheet" href="@Href("~/Content/Site.css")" />
@@ -12,24 +11,93 @@
     $(".navbar").removeClass("navbar-default");
     $(".navbar").addClass("navbar-inverse");
 </script>
+<script>
+    $(document).ready(function() {
+        var g = new JustGage({
+            id: "gauge-min-load-page-time",
+            value:@Model.Result.PageLoadedMinTime.Milliseconds,
+            min: 0,
+            max: @Model.Result.PageLoadedMaxTime.Milliseconds,
+            title: "",
+            startAnimationTime: 3000,
+            valueFontColor: "#fff",
+            symbol: "ms",
+            gaugeWidthScale:0.8,
+            shadowSize:0,
+            shadowOpacity:0,
+            relativeGaugeSize:true,
+            pointer:true,
+            startAnimationType: "bounce"
+        });
+        var g1 = new JustGage({
+            id: "gauge-middle-load-page-time",
+            value: @Model.Result.PageLoadedMiddleTime.Milliseconds,
+            min: 0,
+            max: @Model.Result.PageLoadedMaxTime.Milliseconds,
+            title: "",
+            startAnimationTime: 3000,
+            valueFontColor: "#fff",
+            symbol: "ms",
+            gaugeWidthScale:0.8,
+            shadowSize:0,
+            shadowOpacity:0,
+            startAnimationType: "bounce",
+            relativeGaugeSize:true,
+            pointer:true
+        });
+        var g2 = new JustGage({
+            id: "gauge-max-load-page-time",
+            value: @Model.Result.PageLoadedMaxTime.Milliseconds,
+            min: 0,
+            max: @Model.Result.PageLoadedMaxTime.Milliseconds,
+            title: "",
+            startAnimationTime: 3000,
+            valueFontColor: "#fff",
+            symbol: "ms",
+            gaugeWidthScale:0.8,
+            shadowSize:0,
+            shadowOpacity:0,            
+            relativeGaugeSize:true,
+            pointer:true,
+            startAnimationType: "bounce"
+        });
+    });
 
-<div class="container-fluid">
+</script>
+<div class="container-fluid">    
+    <div class="row">
+        <div id="inf-cell-url" class="infographics-cell">
+            <div class="inf-block-header">
+                <h4>Tested URL</h4>
+            </div>
+            <h1 class="inf-label">@Model.Site.Url</h1>
+        </div>
+    </div>
     <div class="row">
         <div class="inf-cells-container">
             <div id="inf-block-site-ping" class="infographics-cell">
                 <div class="inf-block-header">
                     <h4>Ping</h4>
                 </div>
-                <h3>@Model.Result.SiteResponseTime.Milliseconds</h3>
+                <h1 class="inf-label">@(Model.Result.SiteResponseTime.Milliseconds)ms</h1>
             </div>
             <div class="infographics-cell">
-                <div class="inf-block-header"></div>
+                <div class="inf-block-header">
+                    <h4>Min load page time</h4>
+                </div>
+                <div class="gauge"id="gauge-min-load-page-time"></div>
             </div>
             <div class="infographics-cell">
-                <div class="inf-block-header"></div>
+                <div class="inf-block-header">
+                    <h4>Middle load page time</h4>
+                </div>
+                <div class="gauge" id="gauge-middle-load-page-time"></div>
             </div>
             <div class="infographics-cell">
-                <div class="inf-block-header"></div>
+                <div class="inf-block-header">
+                    <h4>Max load page time</h4>
+                </div>
+                <div class="gauge" id="gauge-max-load-page-time"></div>
             </div>
         </div>
     </div>

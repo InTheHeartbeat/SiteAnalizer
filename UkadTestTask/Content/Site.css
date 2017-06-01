@@ -32,8 +32,14 @@ svg, svg:not(:root) { overflow: visible;}
     width: 24%;
     height: 16em;
     background: #222;
-    margin: 1em auto;        
-    float: left;    
+    margin: 1em auto;
+    margin-top: 0;        
+    float: left;
+    color: white;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.22), 0 2px 2px rgba(0,0,0,0.34);
+    text-shadow: 1px 1px 1px black;
 }
 .inf-block-header {
     width: 100%;
@@ -42,8 +48,21 @@ svg, svg:not(:root) { overflow: visible;}
     color: white;
     text-align: center;
     position: relative;
+    border-bottom-left-radius: 10%;
+    border-bottom-right-radius: 10%;
 }
-.inf-block-header h4 { margin: 0; position: absolute; left: 0;right: 0;top: 50%;margin-top: -0.625em;}
+.inf-block-header h4 { margin: 0; position: absolute; left: 0;right: 0;top: 50%;margin-top: -0.425em;}
+
+.gauge{ width: 90%;height: 90%;position: absolute; top: 0;bottom: 0; left: 0; right: 0;margin: auto;}
+.inf-label{margin: 0; position: absolute; left: 0;right: 0;top: 50%;margin-top: -0.625em;}
+#inf-cell-url {
+    width: 100% !important;
+    height: 7em !important;
+    max-width: 100% !important;
+    font-size: 1em !important;    
+}
+#inf-cell-url .inf-label{ margin-top: -0.3em !important;}
+#inf-block-site-ping h1 { font-size: 4em;}
 /*
 .input-group:not(:last-child)::before {
     content: "";
@@ -111,7 +130,9 @@ svg, svg:not(:root) { overflow: visible;}
 }
 
 .navbar-nav {
-    width: 70%;
+    position: absolute;
+    left: 0;
+    right: 0;
     text-align: center;
 }
 .navbar-nav > li {

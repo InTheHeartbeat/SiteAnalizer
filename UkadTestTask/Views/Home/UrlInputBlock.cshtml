@@ -1,7 +1,7 @@
 ﻿@model UkadTestTask.Models.MainModel
 <div id="input-group-url" class="input-group input-group-lg">
     <span class="input-group-addon" id="basic-addon">http://</span>
-    @Html.TextBoxFor(t => Model.Url, new {@class = "form-control", placeholder = "Enter youre URL here", type = "text", aria_describedby = "basic-addon"})    
+    @Html.TextBoxFor(t => Model.Url, new {@class = "form-control", placeholder = "Enter youre URL here", type = "text", aria_describedby = "basic-addon", id= "input-url" })    
     <span class="input-group-btn">
         <button id="start-handle-button" class="btn btn-default" type="submit" name="url-form-action" value="scan-url">Go!</button>
     </span>

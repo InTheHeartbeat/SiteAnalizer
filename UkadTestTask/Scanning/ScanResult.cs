@@ -18,7 +18,7 @@ namespace UkadTestTask.Scanning
             
         }
 
-        public ScanResult(TimeSpan totalTimeSpentScanning, DateTime siteResponseTime, TimeSpan minPageLoadedTime, TimeSpan maxPageLoadedTime, bool sitemapLoaded, ScanProccessState proccessState, int totalSitemaps, int totalAddresses, int scannedAddresses, TimeSpan middlePageLoadedTime, TimeSpan sitemapLoadedTime, int scannedSitemaps):base(sitemapLoaded,proccessState,totalSitemaps,totalAddresses,scannedAddresses,scannedSitemaps)
+        public ScanResult(TimeSpan totalTimeSpentScanning, TimeSpan siteResponseTime, TimeSpan minPageLoadedTime, TimeSpan maxPageLoadedTime, bool sitemapLoaded, ScanProccessState proccessState, int totalSitemaps, int totalAddresses, int scannedAddresses, TimeSpan middlePageLoadedTime, TimeSpan sitemapLoadedTime, int scannedSitemaps):base(sitemapLoaded,proccessState,totalSitemaps,totalAddresses,scannedAddresses,scannedSitemaps)
         {
             TotalTimeSpentScanning = totalTimeSpentScanning;
             SiteResponseTime = siteResponseTime;
