@@ -28,15 +28,17 @@ namespace UkadTestTask
                       "~/Scripts/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/site-scripts").Include(
-                      "~/Scripts/Site.js"));
+                      "~/Scripts/Site.js",
+                      "~/Scripts/jqBarGraph.1.1.min.js"
+            ));
 
             bundles.Add(new ScriptBundle("~/bundles/gauge").Include(
                 "~/Scripts/raphael-2.1.4.min.js",
                 "~/Scripts/justgage.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",                      
-                      "~/Content/jPages.css"));
+                      "~/Content/bootstrap.css",
+                      "~/Content/jquery.jqplot.min.css"));
         }
     }
 }

@@ -56,10 +56,103 @@
             symbol: "ms",
             gaugeWidthScale:0.8,
             shadowSize:0,
-            shadowOpacity:0,            
+            shadowOpacity:0,
             relativeGaugeSize:true,
             pointer:true,
             startAnimationType: "bounce"
+        });
+
+        @{
+            int c0_20 = 0;
+            int c20_80 = 0;
+            int c80_150 = 0;
+            int c150_300 = 0;
+            int c300_350 = 0;
+            int c350_400 = 0;
+            int c400_450 = 0;
+            int c450_550 = 0;
+            int c550_650 = 0;
+            int c650_750 = 0;
+            int c750_850 = 0;
+            int c850_950 = 0;
+            int c950_1500 = 0;
+            Model.Site.Sitemaps.ForEach(s=> c0_20 += s.Urls.Count(u=>u.LoadTime.Milliseconds >=0 && u.LoadTime.Milliseconds <= 20));
+            Model.Site.Sitemaps.ForEach(s => c20_80 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 20 && u.LoadTime.Milliseconds <= 80));
+            Model.Site.Sitemaps.ForEach(s => c80_150 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 80 && u.LoadTime.Milliseconds <= 150));
+            Model.Site.Sitemaps.ForEach(s => c150_300 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 150 && u.LoadTime.Milliseconds <= 300));
+            Model.Site.Sitemaps.ForEach(s => c300_350 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 300 && u.LoadTime.Milliseconds <= 350));
+            Model.Site.Sitemaps.ForEach(s => c350_400 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 350 && u.LoadTime.Milliseconds <= 400));
+            Model.Site.Sitemaps.ForEach(s => c400_450 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 400 && u.LoadTime.Milliseconds <= 450));
+            Model.Site.Sitemaps.ForEach(s => c450_550 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 450 && u.LoadTime.Milliseconds <= 550));
+            Model.Site.Sitemaps.ForEach(s => c550_650 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 550 && u.LoadTime.Milliseconds <= 650));
+            Model.Site.Sitemaps.ForEach(s => c650_750 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 650 && u.LoadTime.Milliseconds <= 750));
+            Model.Site.Sitemaps.ForEach(s => c750_850 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 750 && u.LoadTime.Milliseconds <= 850));
+            Model.Site.Sitemaps.ForEach(s => c850_950 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 850 && u.LoadTime.Milliseconds <= 950));
+            Model.Site.Sitemaps.ForEach(s => c950_1500 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 950 && u.LoadTime.Milliseconds <= 1500));
+        }
+
+        arrayOfData = new Array(
+            [@c0_20,'0-20ms','#0091EA'],
+            [@c20_80,'20-80ms','#0091EA'],
+            [@c80_150,'80-150ms','#0091EA'],
+            [@c150_300,'150-300ms','#0091EA'],
+            [@c300_350,'300-350ms','#0091EA'],
+            [@c350_400,'350-400ms','#0091EA'],
+            [@c400_450,'400-450ms','#0091EA'],
+            [@c450_550,'450-550ms','#0091EA'],
+            [@c550_650,'550-650ms','#0091EA'],
+            [@c650_750,'650-750ms','#0091EA'],
+            [@c750_850,'750-850ms','#0091EA'],
+            [@c850_950,'850-950ms','#0091EA'],
+            [@c950_1500,'950-1500ms','#0091EA']
+        );
+
+        $('#bar-chart').jqBarGraph({
+            data: arrayOfData, // array of data for your graph
+            title: false, // title of your graph, accept HTML
+            barSpace: 6, // this is default space between bars in pixels
+            width: "98%", // default width of your graph
+            height: "85%", //default height of your graph
+            color: '#000000', // if you don't send colors for your data this will be default bars color
+            colors: false, // array of colors that will be used for your bars and legends
+            lbl: '', // if there is no label in your array
+            sort: false, // sort your data before displaying graph, you can sort as 'asc' or 'desc'
+            position: 'bottom', // position of your bars, can be 'bottom' or 'top'. 'top' doesn't work for multi type
+            prefix: '', // text that will be shown before every label
+            postfix: '', // text that will be shown after every label
+            animate: true, // if you don't need animated appearance change to false
+            speed: 5, // speed of animation in seconds
+            legendWidth: 100, // width of your legend box
+            legend: false, // if you want legend change to true
+            legends: false, // array for legend. for simple graph type legend will be extracted from labels if you don't set this
+            type: false, // for multi array data default graph type is stacked, you can change to 'multi' for multi bar type
+            showValues: true, // you can use this for multi and stacked type and it will show values of every bar part
+            showValuesColor: '#fff' // color of font for values
+        });
+        $(window).resize(function() {
+            $('#bar-chart').html("");
+            $('#bar-chart').jqBarGraph({
+                data: arrayOfData, // array of data for your graph
+                title: false, // title of your graph, accept HTML
+                barSpace: 6, // this is default space between bars in pixels
+                width: "98%", // default width of your graph
+                height: "85%", //default height of your graph
+                color: '#000000', // if you don't send colors for your data this will be default bars color
+                colors: false, // array of colors that will be used for your bars and legends
+                lbl: '', // if there is no label in your array
+                sort: false, // sort your data before displaying graph, you can sort as 'asc' or 'desc'
+                position: 'bottom', // position of your bars, can be 'bottom' or 'top'. 'top' doesn't work for multi type
+                prefix: '', // text that will be shown before every label
+                postfix: '', // text that will be shown after every label
+                animate: true, // if you don't need animated appearance change to false
+                speed: 5, // speed of animation in seconds
+                legendWidth: 100, // width of your legend box
+                legend: false, // if you want legend change to true
+                legends: false, // array for legend. for simple graph type legend will be extracted from labels if you don't set this
+                type: false, // for multi array data default graph type is stacked, you can change to 'multi' for multi bar type
+                showValues: true, // you can use this for multi and stacked type and it will show values of every bar part
+                showValuesColor: '#fff' // color of font for values
+            });
         });
     });
 
@@ -103,10 +196,12 @@
     </div>
     <div class="row">
         <div class="inf-cells-container">
-            <div class="infographics-cell"></div>
-            <div class="infographics-cell"></div>
-            <div class="infographics-cell"></div>
-            <div class="infographics-cell"></div>
+            <div class="infographics-cell inf-wide-1-cell">
+                <div class="inf-block-header">
+                    <h4>Bar chart</h4>
+                </div>
+                <div id="bar-chart"></div>
+            </div>                    
         </div>
     </div>
 </div>

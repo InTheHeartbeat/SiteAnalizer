@@ -1,4 +1,5 @@
 ﻿html,body, .body-content { height: 100%; width: 100%; overflow: hidden; }
+.body-content { overflow-y: auto;}
 body { background-color: #0091EA; }
 #main-progress-bar { height: 0.4em; box-shadow: 0 1px 5px 1px black;}
 
@@ -41,6 +42,11 @@ svg, svg:not(:root) { overflow: visible;}
     box-shadow: 0 2px 3px rgba(0,0,0,0.22), 0 2px 2px rgba(0,0,0,0.34);
     text-shadow: 1px 1px 1px black;
 }
+.inf-wide-1-cell {
+    max-width: 100%;
+    width: 99%;
+    height: 22em;
+}
 .inf-block-header {
     width: 100%;
     height: 2em;
@@ -55,6 +61,7 @@ svg, svg:not(:root) { overflow: visible;}
 
 .gauge{ width: 90%;height: 90%;position: absolute; top: 0;bottom: 0; left: 0; right: 0;margin: auto;}
 .inf-label{margin: 0; position: absolute; left: 0;right: 0;top: 50%;margin-top: -0.625em;}
+
 #inf-cell-url {
     width: 100% !important;
     height: 7em !important;
@@ -118,8 +125,8 @@ svg, svg:not(:root) { overflow: visible;}
     margin-bottom: 2em;
     white-space: nowrap;    
 }
-
-.navbar { transition: all 1s ease-in;border-radius: 0;}
+.container-fluid{ margin-top: 1em;}
+.navbar { transition: all 1s ease-in;border-radius: 0;margin-bottom: 0;}
 .navbar * { transition: all 1s ease-in;}
 
 .navbar-nav > li {
@@ -199,6 +206,15 @@ svg, svg:not(:root) { overflow: visible;}
     margin: 1em;
     border-radius: 50%;}
 
+
+.jqplot-target{ color: white !important;}
+#bar-chart {
+    position: absolute !important;    
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
 
 .space {
     background: transparent;
