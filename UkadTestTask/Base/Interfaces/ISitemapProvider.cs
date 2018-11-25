@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace UkadTestTask.Base.Interfaces
+namespace SiteAnalyzer.Base.Interfaces
 {
     interface ISitemapProvider
     {

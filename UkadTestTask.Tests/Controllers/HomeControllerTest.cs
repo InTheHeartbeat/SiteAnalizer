@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UkadTestTask;
-using UkadTestTask.Controllers;
+using SiteAnalyzer;
+using SiteAnalyzer.Controllers;
 
-namespace UkadTestTask.Tests.Controllers
+namespace SiteAnalyzer.Tests.Controllers
 {
     [TestClass]
     public class HomeControllerTest

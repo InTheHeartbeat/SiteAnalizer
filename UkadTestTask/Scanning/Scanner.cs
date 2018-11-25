@@ -6,10 +6,10 @@ using System.Threading;
 using System.Web;
 using System.Web.Hosting;
 using System.Xml.Serialization;
-using UkadTestTask.Base;
+using SiteAnalyzer.Base;
 using WebGrease.Css.Extensions;
 
-namespace UkadTestTask.Scanning
+namespace SiteAnalyzer.Scanning
 {
     public class Scanner : IRegisteredObject
     {        

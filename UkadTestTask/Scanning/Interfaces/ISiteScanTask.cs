@@ -1,4 +1,4 @@
-﻿namespace UkadTestTask.Scanning.Interfaces
+﻿namespace SiteAnalyzer.Scanning.Interfaces
 {
     interface ISiteScanTask
     {

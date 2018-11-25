@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Optimization;
 
-namespace UkadTestTask
+namespace SiteAnalyzer
 {
     public class BundleConfig
     {

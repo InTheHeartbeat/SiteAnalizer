@@ -92,9 +92,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UkadTestTask\UkadTestTask.csproj">
+    <ProjectReference Include="..\UkadTestTask\SiteAnalyzer.csproj">
       <Project>{774AC88D-D93E-4CBF-8DC3-E02DD4C6F672}</Project>
-      <Name>UkadTestTask</Name>
+      <Name>SiteAnalyzer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

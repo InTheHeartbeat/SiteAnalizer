@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UkadTestTask", "UkadTestTask\UkadTestTask.csproj", "{774AC88D-D93E-4CBF-8DC3-E02DD4C6F672}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiteAnalyzer", "UkadTestTask\SiteAnalyzer.csproj", "{774AC88D-D93E-4CBF-8DC3-E02DD4C6F672}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UkadTestTask.Tests", "UkadTestTask.Tests\UkadTestTask.Tests.csproj", "{621ED5EA-B511-401F-BD65-513BFEBA91DA}"
 EndProject
@@ -24,5 +24,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7008BDF-0CA7-4FB2-BB45-CADC5CCC0B1C}
 	EndGlobalSection
 EndGlobal

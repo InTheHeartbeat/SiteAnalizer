@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using UkadTestTask.Base;
-using UkadTestTask.Scanning;
+using SiteAnalyzer.Base;
+using SiteAnalyzer.Scanning;
 
-namespace UkadTestTask.Models
+namespace SiteAnalyzer.Models
 {
     public class ResultDataModel
     {

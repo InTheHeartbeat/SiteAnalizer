@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace UkadTestTask.Models
+namespace SiteAnalyzer.Models
 {
     public class MainModel
     {

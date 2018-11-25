@@ -1,4 +1,4 @@
-﻿@model UkadTestTask.Models.ResultDataModel
+﻿@model SiteAnalyzer.Models.ResultDataModel
 @{
     ViewBag.Title = "Index";       
 }
@@ -76,19 +76,21 @@
             int c750_850 = 0;
             int c850_950 = 0;
             int c950_1500 = 0;
-            Model.Site.Sitemaps.ForEach(s=> c0_20 += s.Urls.Count(u=>u.LoadTime.Milliseconds >=0 && u.LoadTime.Milliseconds <= 20));
-            Model.Site.Sitemaps.ForEach(s => c20_80 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 20 && u.LoadTime.Milliseconds <= 80));
-            Model.Site.Sitemaps.ForEach(s => c80_150 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 80 && u.LoadTime.Milliseconds <= 150));
-            Model.Site.Sitemaps.ForEach(s => c150_300 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 150 && u.LoadTime.Milliseconds <= 300));
-            Model.Site.Sitemaps.ForEach(s => c300_350 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 300 && u.LoadTime.Milliseconds <= 350));
-            Model.Site.Sitemaps.ForEach(s => c350_400 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 350 && u.LoadTime.Milliseconds <= 400));
-            Model.Site.Sitemaps.ForEach(s => c400_450 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 400 && u.LoadTime.Milliseconds <= 450));
-            Model.Site.Sitemaps.ForEach(s => c450_550 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 450 && u.LoadTime.Milliseconds <= 550));
-            Model.Site.Sitemaps.ForEach(s => c550_650 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 550 && u.LoadTime.Milliseconds <= 650));
-            Model.Site.Sitemaps.ForEach(s => c650_750 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 650 && u.LoadTime.Milliseconds <= 750));
-            Model.Site.Sitemaps.ForEach(s => c750_850 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 750 && u.LoadTime.Milliseconds <= 850));
-            Model.Site.Sitemaps.ForEach(s => c850_950 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 850 && u.LoadTime.Milliseconds <= 950));
-            Model.Site.Sitemaps.ForEach(s => c950_1500 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 950 && u.LoadTime.Milliseconds <= 1500));
+            int co1500 = 0;
+            Model.Site.Sitemaps.ForEach(s=> c0_20 += s.Urls.Count(u=>u.LoadTime.Milliseconds >= 0 && u.LoadTime.Milliseconds < 20));
+            Model.Site.Sitemaps.ForEach(s => c20_80 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 20 && u.LoadTime.Milliseconds < 80));
+            Model.Site.Sitemaps.ForEach(s => c80_150 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 80 && u.LoadTime.Milliseconds < 150));
+            Model.Site.Sitemaps.ForEach(s => c150_300 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 150 && u.LoadTime.Milliseconds < 300));
+            Model.Site.Sitemaps.ForEach(s => c300_350 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 300 && u.LoadTime.Milliseconds < 350));
+            Model.Site.Sitemaps.ForEach(s => c350_400 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 350 && u.LoadTime.Milliseconds < 400));
+            Model.Site.Sitemaps.ForEach(s => c400_450 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 400 && u.LoadTime.Milliseconds < 450));
+            Model.Site.Sitemaps.ForEach(s => c450_550 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 450 && u.LoadTime.Milliseconds < 550));
+            Model.Site.Sitemaps.ForEach(s => c550_650 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 550 && u.LoadTime.Milliseconds < 650));
+            Model.Site.Sitemaps.ForEach(s => c650_750 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 650 && u.LoadTime.Milliseconds < 750));
+            Model.Site.Sitemaps.ForEach(s => c750_850 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 750 && u.LoadTime.Milliseconds < 850));
+            Model.Site.Sitemaps.ForEach(s => c850_950 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 850 && u.LoadTime.Milliseconds < 950));
+            Model.Site.Sitemaps.ForEach(s => c950_1500 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 950 && u.LoadTime.Milliseconds < 1500));
+            Model.Site.Sitemaps.ForEach(s => co1500 += s.Urls.Count(u => u.LoadTime.Milliseconds >= 1500));
         }
 
         arrayOfData = new Array(
@@ -104,7 +106,8 @@
             [@c650_750,'650-750ms','#0091EA'],
             [@c750_850,'750-850ms','#0091EA'],
             [@c850_950,'850-950ms','#0091EA'],
-            [@c950_1500,'950-1500ms','#0091EA']
+            [@c950_1500,'950-1500ms','#0091EA'],
+            [@co1500,'>1500ms','#0091EA']
         );
 
         $('#bar-chart').jqBarGraph({
@@ -157,7 +160,21 @@
     });
 
 </script>
-<div class="container-fluid">    
+
+
+<div class="sidebar">
+    <ul>
+        <li class="active">            
+            <span class="sp-btn glyphicon glyphicon glyphicon-dashboard" aria-hidden="true"></span>            
+        </li>
+        <li>            
+            <span class="sp-btn glyphicon glyphicon glyphicon-th-list" aria-hidden="true"></span>            
+        </li>
+    </ul>
+</div>
+
+<div class="container-fluid" id="view-result-container">  
+    <div>
     <div class="row">
         <div id="inf-cell-url" class="infographics-cell">
             <div class="inf-block-header">
@@ -194,33 +211,17 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="inf-cells-container">
-            <div class="infographics-cell inf-wide-1-cell">
-                <div class="inf-block-header">
-                    <h4>Bar chart</h4>
-                </div>
-                <div id="bar-chart"></div>
-            </div>                    
+        <div class="row">
+            <div class="inf-cells-container">
+                <div class="infographics-cell inf-wide-1-cell">
+                    <div class="inf-block-header">
+                        <h4>Bar chart</h4>
+                    </div>
+                    <div id="bar-chart"></div>
+                </div>                    
+            </div>
         </div>
-    </div>
-</div>
-
-<div style="overflow: scroll; color: white;">
-    <h5>Scanned URL: @Model.Site.Url</h5>
-    <h5>PageLoadedMaxTime: @Model.Result.PageLoadedMaxTime.Milliseconds</h5>
-    <h5>PageLoadedMiddleTime: @Model.Result.PageLoadedMiddleTime.Milliseconds</h5>
-    <h5>PageLoadedMinTime: @Model.Result.PageLoadedMinTime.Milliseconds</h5>
-    <br/>
-    <h5>SitemapLoadedTime: @Model.Result.SitemapLoadedTime.Milliseconds</h5>
-    <br/>
-    <h5>TotalTimeSpentScanning (minutes): @Model.Result.TotalTimeSpentScanning.Minutes</h5>
-    <br />
-    <h5>TotalSitemaps: @Model.Result.TotalSitemaps</h5>
-    <h5>ScannedSitemaps: @Model.Result.ScannedSitemaps</h5>
-    <br/>
-    <h5>TotalAddresses: @Model.Result.TotalAddresses</h5>
-    <h5>ScannedAddresses: @Model.Result.ScannedAddresses</h5>
+    </div>  
 </div>
 
 

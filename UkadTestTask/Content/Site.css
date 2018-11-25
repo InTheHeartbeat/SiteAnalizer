@@ -1,5 +1,5 @@
 ﻿html,body, .body-content { height: 100%; width: 100%; overflow: hidden; }
-.body-content { overflow-y: auto;}
+.body-content { overflow-y: auto;height: 92% !important;}
 body { background-color: #0091EA; }
 #main-progress-bar { height: 0.4em; box-shadow: 0 1px 5px 1px black;}
 
@@ -70,6 +70,44 @@ svg, svg:not(:root) { overflow: visible;}
 }
 #inf-cell-url .inf-label{ margin-top: -0.3em !important;}
 #inf-block-site-ping h1 { font-size: 4em;}
+
+.sidebar {
+    width: 4em;
+    height: 100%;
+    background: #222;
+    margin-left: -15px;
+}
+    .sidebar ul {
+        list-style-type: none;
+        color: white;
+        padding: 0;
+        margin: 0;
+        padding-top: 1em;
+    }
+.sidebar ul li {
+    width: 4em;
+    height: 4em;
+    margin-bottom: 1em;
+    position: relative;    
+}
+.sidebar ul li.active{ background-color: #435d70;border-top-left-radius: 2em;
+    border-bottom-left-radius: 2em;}
+.sidebar ul li.active .sp-btn{color:white;}
+.sidebar ul li:not(.active) span:hover{ color: white;}
+
+.sp-btn {
+    width: 100%;
+    height: 100%;
+    color: #aaaaaa;
+    font-size: 2em;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-top: -0.490em;
+}
 /*
 .input-group:not(:last-child)::before {
     content: "";
@@ -125,7 +163,7 @@ svg, svg:not(:root) { overflow: visible;}
     margin-bottom: 2em;
     white-space: nowrap;    
 }
-.container-fluid{ margin-top: 1em;}
+#view-result-container{ margin-top: 1em;}
 .navbar { transition: all 1s ease-in;border-radius: 0;margin-bottom: 0;}
 .navbar * { transition: all 1s ease-in;}
 

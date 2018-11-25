@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Text;
 using System.Web.Http;
-using UkadTestTask.Scanning;
+using SiteAnalyzer.Scanning;
 
-namespace UkadTestTask.Controllers.Api
+namespace SiteAnalyzer.Controllers.Api
 {
     public class StateProviderController : ApiController
     {

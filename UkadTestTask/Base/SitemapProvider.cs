@@ -6,11 +6,11 @@ using System.Net;
 using System.Web;
 using System.Xml;
 using System.Xml.Linq;
-using UkadTestTask.Base.Interfaces;
-using UkadTestTask.Scanning;
+using SiteAnalyzer.Base.Interfaces;
+using SiteAnalyzer.Scanning;
 using WebGrease.Css.Extensions;
 
-namespace UkadTestTask.Base
+namespace SiteAnalyzer.Base
 {
     public class SitemapProvider : ISitemapProvider
     {        
@@ -69,10 +69,17 @@ namespace UkadTestTask.Base
 
         private Stream LoadRawSitemapFromUrl(string url)
         {
-            HttpWebResponse response = (HttpWebResponse)((HttpWebRequest)WebRequest.Create(url)).GetResponse();
-            if(response == null)
-                throw new WebException("Response from url " + url + " is null.");
-            return response.GetResponseStream();                                      
+            try
+            {
+                HttpWebResponse response = (HttpWebResponse) ((HttpWebRequest) WebRequest.Create(url)).GetResponse();
+                if (response == null)
+                    throw new WebException("Response from url " + url + " is null.");
+                return response.GetResponseStream();
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 }

@@ -8,11 +8,11 @@ using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Serialization;
-using UkadTestTask.Base;
-using UkadTestTask.Scanning.Interfaces;
+using SiteAnalyzer.Base;
+using SiteAnalyzer.Scanning.Interfaces;
 using WebGrease.Css.Extensions;
 
-namespace UkadTestTask.Scanning
+namespace SiteAnalyzer.Scanning
 {    
     public class SiteScanTask : ISiteScanTask
     {

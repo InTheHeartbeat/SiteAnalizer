@@ -5,10 +5,10 @@ using System.Web;
 using System.Web.WebSockets;
 using System.Xml;
 using System.Xml.Linq;
-using UkadTestTask.Scanning;
+using SiteAnalyzer.Scanning;
 using WebGrease.Css.Extensions;
 
-namespace UkadTestTask.Base
+namespace SiteAnalyzer.Base
 {
     [Serializable]
     public class Sitemap

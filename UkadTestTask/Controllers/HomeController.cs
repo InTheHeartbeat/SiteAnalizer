@@ -8,11 +8,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using UkadTestTask.Base;
-using UkadTestTask.Models;
-using UkadTestTask.Scanning;
+using SiteAnalyzer.Base;
+using SiteAnalyzer.Models;
+using SiteAnalyzer.Scanning;
 
-namespace UkadTestTask.Controllers
+namespace SiteAnalyzer.Controllers
 {
     public class HomeController : Controller
     {
@@ -25,20 +25,20 @@ namespace UkadTestTask.Controllers
             return View(_currentModel);
         }
 
-        [HttpPost]        
+        [HttpPost]
         public ActionResult HandleUrl(MainModel model)
         {
             _currentModel = model;
-            
+
             ScannerProvider.Scanner.ScanSite(model.Url, false);
-            model.Completed = true;               
-            return PartialView("UrlInputBlock", _currentModel);          
+            model.Completed = true;
+            return PartialView("UrlInputBlock", _currentModel);
         }
 
         public ActionResult ViewResult(string url)
         {
             SiteScanTask task = ScannerProvider.Scanner.ScanTasks.FirstOrDefault(s => s.Site.Url == url);
-            return View("ViewResult",new ResultDataModel(task.Site, task.ResultState));
+            return View("ViewResult", new ResultDataModel(task.Site, task.ResultState));
         }
-    }    
+    }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Xml.Serialization;
 
-namespace UkadTestTask.Base
+namespace SiteAnalyzer.Base
 {
     [Serializable]
     public class WebSite
