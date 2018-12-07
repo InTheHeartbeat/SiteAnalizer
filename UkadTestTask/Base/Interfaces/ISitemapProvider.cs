@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SiteAnalyzer.Base.Interfaces
 {
-    interface ISitemapProvider
+    internal interface ISitemapProvider
     {
-        List<Sitemap> GetSitemapsFromUrl(string url);
+        Task<List<Sitemap>> GetSitemapsFromUrl(string url);
     }
 }

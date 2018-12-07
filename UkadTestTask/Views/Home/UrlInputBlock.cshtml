@@ -1,14 +1,69 @@
 ﻿@model SiteAnalyzer.Models.MainModel
-<div id="input-group-url" class="input-group input-group-lg">
-    <span class="input-group-addon" id="basic-addon">http://</span>
-    @Html.TextBoxFor(t => Model.Url, new {@class = "form-control", placeholder = "Enter youre URL here", type = "text", aria_describedby = "basic-addon", id= "input-url" })    
-    <span class="input-group-btn">
-        <button id="start-handle-button" class="btn btn-default" type="submit" name="url-form-action" value="scan-url">Go!</button>
-    </span>
-</div>
-<div id="status"></div>
-@if (Model.Completed)
+
+@if(!Model.Completed && !Model.SitemapContain)
+{<div id="input-group-url" class="input-group input-group-lg">
+     <span class="input-group-addon" id="basic-addon">URL</span>
+     @Html.TextBoxFor(t => Model.Url, new { @class = "form-control", placeholder = "Enter youre URL here", type = "text", aria_describedby = "basic-addon", id = "input-url" })
+     <div id="error-block" class="alert alert-danger" style="display:none"></div>
+     <span class="input-group-btn">
+         <button id="start-handle-button" class="btn btn-default" type="submit" name="url-form-action" value="scan-url">Go!</button>
+     </span>
+ </div>
+
+    <div class="progress" style="display: none">
+        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+    </div>
+
+    <div id="status"></div>
+    <div id="eta"></div>
+}
+
+@if (Model.Completed && Model.SitemapContain)
 {
-    @Html.ActionLink("Completed!", "ViewResult", new {url=Model.Url}, new {id = "completedLink"})
-    <h1>Completed!</h1>
+    <div id="input-group-url" style="display: none;" class="input-group input-group-lg">
+        <span class="input-group-addon" id="basic-addon">URL</span>
+        @Html.TextBoxFor(t => Model.Url, new { @class = "form-control", placeholder = "Enter youre URL here", type = "text", aria_describedby = "basic-addon", id = "input-url" })
+        <div id="error-block" class="alert alert-danger" style="display:none"></div>
+        
+    </div>
+
+    <h1 class="completed">Completed!</h1>
+    <div class="view-result"><a href="@Url.Action("ViewResult", new {url=Model.Url})" ><span>View Result</span></a>    </div>   
+    <script>
+        $("#desc-1").animate({ "margin-left": "0%" }, 600, "swing");
+        $("#desc-2").animate({ "margin-left": "0%" }, 600, "swing");
+        $("body").animate({ backgroundColor: "#0072C6" }, 1000);
+
+        $("#load-bar-1").fadeOut();
+
+        $(".navbar").addClass("navbar-default");
+        $(".navbar").removeClass("navbar-inverse");
+
+        $("#input-group-url").fadeIn(1000);
+        $(".completed").fadeIn(1000);
+        $(".view-result").fadeIn(1000);
+        $("#main-desc").css("height", "auto");
+        $("#main-desc").css("margin-top", "3em");
+    </script>
+}
+
+@if (Model.Completed && !Model.SitemapContain)
+{
+    <link href='https://fonts.googleapis.com/css?family=Monoton' rel='stylesheet' type='text/css'>
+    
+    <div class="sitemap-notfound">
+        <h1>Sitemap <span style="color:FireBrick">not</span> found.</h1>
+        <div class="div404container">
+            <p id="error">E<span>r</span>ror</p>
+            <p id="code">4<span>0</span><span>4</span></p>
+        </div>
+        <h2>This may mean that the site does not have a map, it is disabled or only a certain circle of persons has access rights. Such sites are not scanned.</h2>
+    </div>    
+    <br/>
+    <a href="@Url.Action("Index")"><h2 class="back">Back</h2></a>
+    <script>
+        stopColorAnim();
+        $("body").animate({ backgroundColor: "rgb(32, 37, 39)" }, 1000);
+        $("#main-desc").hide();
+    </script>
 }

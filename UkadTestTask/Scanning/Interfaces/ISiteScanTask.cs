@@ -1,8 +1,10 @@
-﻿namespace SiteAnalyzer.Scanning.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace SiteAnalyzer.Scanning.Interfaces
 {
-    interface ISiteScanTask
+    internal interface ISiteScanTask
     {
-        void Scan();
+        Task Scan();
         void Stop();
     }
 }

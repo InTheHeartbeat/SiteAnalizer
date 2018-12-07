@@ -1,6 +1,14 @@
 ﻿html,body, .body-content { height: 100%; width: 100%; overflow: hidden; }
-.body-content { overflow-y: auto;height: 92% !important;}
-body { background-color: #0091EA; }
+.body-content {
+    position: absolute;
+    bottom: 0px;
+    top: 52px;
+    height: auto;
+    overflow-y: auto;
+}
+body {
+    background-color: #0072C6;
+}
 #main-progress-bar { height: 0.4em; box-shadow: 0 1px 5px 1px black;}
 
 #input-url{box-shadow: 1px 3px 5px 0px #575555 inset; border:none;}
@@ -68,6 +76,12 @@ svg, svg:not(:root) { overflow: visible;}
     max-width: 100% !important;
     font-size: 1em !important;    
 }
+#inf-cell-table {
+    width: 100% !important;    
+    max-width: 100% !important;
+    font-size: 1em !important;
+    height:   79vh !important;
+}
 #inf-cell-url .inf-label{ margin-top: -0.3em !important;}
 #inf-block-site-ping h1 { font-size: 4em;}
 
@@ -75,8 +89,9 @@ svg, svg:not(:root) { overflow: visible;}
     width: 4em;
     height: 100%;
     background: #222;
+    position: fixed;
     margin-left: -15px;
-}
+}   
     .sidebar ul {
         list-style-type: none;
         color: white;
@@ -148,7 +163,9 @@ svg, svg:not(:root) { overflow: visible;}
     margin: 0 auto;
     margin-top: 7em;
 }
-
+#desc-2 {
+    display: inline-block;
+}
 #desc-container {
     position: relative;
     height: 100%;
@@ -163,7 +180,11 @@ svg, svg:not(:root) { overflow: visible;}
     margin-bottom: 2em;
     white-space: nowrap;    
 }
-#view-result-container{ margin-top: 1em;}
+#view-result-container {
+    margin-top: 1em;
+    width: 95%;
+    margin-right: initial;
+}
 .navbar { transition: all 1s ease-in;border-radius: 0;margin-bottom: 0;}
 .navbar * { transition: all 1s ease-in;}
 
@@ -211,7 +232,8 @@ svg, svg:not(:root) { overflow: visible;}
     left: -200%;
     right: 0;
     margin: 0 auto;
-    top: 22em;    
+    top: 0;
+    bottom: 0;
     display: none;
 }
 #horizontal-indicators-container{ color: white;}
@@ -220,7 +242,7 @@ svg, svg:not(:root) { overflow: visible;}
     display: inline-block;
     width: 33.3333%;
     height: 200px;
-    float: left;
+    
 }
 #itr-smloadedtime {
     width: 300px;
@@ -238,7 +260,7 @@ svg, svg:not(:root) { overflow: visible;}
 {    display: inline-block;
     width: 3px;
     height: 200px;
-    float: left;
+    
     background-color: #444;
     box-shadow: 1px 1px 1px black inset;
     margin: 1em;
@@ -252,6 +274,86 @@ svg, svg:not(:root) { overflow: visible;}
     left: 0;
     right: 0;
     margin: auto;
+}
+
+#url-form {
+    margin-top: 2em;
+}
+
+.navbar-inverse {
+    background-color: #172227 !important;
+}
+
+.input-group-url-dark span, .input-group-url-dark button {
+    background-color: #172227 !important;
+    border-color: #2c3d44 !important;
+    color: #dedede !important;
+}
+
+.progress {
+    margin-bottom: 5px !important;
+}
+
+#status {
+    color: #dedede;
+    float: right;
+}
+
+#eta{
+    color: #dedede;
+    float: left;
+}
+
+.view-result {
+    display: none;
+    margin: auto;
+    margin-top: 4em;
+    text-align: center;    
+}
+
+    .view-result a {
+        border: 1px solid;
+        color: #dedede;
+        font-size: 3rem;
+        padding: 10px;
+        border-radius: 15px;
+    }
+
+.completed {
+    display: none;
+    font-size: 5em;
+    margin: auto;
+    text-align: center;
+    color: #dedede;
+    text-shadow: 2px 2px 3px black;
+}
+
+.table {
+    text-align: center;
+    color: #dedede;
+    margin: auto;
+    
+    
+    width: auto;
+    display: block;
+    overflow-y: auto;
+    height: 75.8vh !important;
+}
+.table2 {
+    text-align: center;
+    color: #dedede;
+    width: 100% !important;
+    height: auto !important;
+    display: table !important;
+}
+    .table2 a { color: white;border: 1px white solid;padding: 4px;padding-left: 6px;padding-right: 6px; border-radius: 5px}
+    .table th {
+        text-align: center !important;
+    }
+
+
+
+.load-time { color: black !important;text-shadow: none !important;
 }
 
 .space {
@@ -772,4 +874,73 @@ svg, svg:not(:root) { overflow: visible;}
     100% {
         width: 14px;
     }
+}
+
+
+
+
+.div404container {
+    padding: 40px;
+    font-size: 75px;
+    font-family: 'Monoton', cursive;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 0 0 80px red,0 0 30px FireBrick,0 0 6px DarkRed;
+    color: red;
+}
+    .div404container p {
+        margin: 0;
+    }
+#error:hover { text-shadow: 0 0 200px #dedede,0 0 80px #008000,0 0 6px #0000ff; }
+#code:hover { text-shadow: 0 0 100px red,0 0 40px FireBrick,0 0 8px DarkRed; }
+#error {
+    color: #ded;
+    text-shadow: 0 0 80px #dedede,0 0 30px #008000,0 0 6px #0000ff;
+}
+#error span {
+    animation: upper 11s linear infinite;
+}
+#code span:nth-of-type(2) {
+    animation: lower 10s linear infinite;
+}
+#code span:nth-of-type(1) {
+    text-shadow: none;
+    opacity:.4;
+}
+@keyframes upper {
+    0%,19.999%,22%,62.999%,64%, 64.999%,70%,100% {
+        opacity:.99; text-shadow: 0 0 80px #dedede,0 0 30px #008000,0 0 6px #0000ff;
+    }
+    20%,21.999%,63%,63.999%,65%,69.999% {
+        opacity:0.4; text-shadow: none; 
+    }
+}
+@keyframes lower {
+    0%,12%,18.999%,23%,31.999%,37%,44.999%,46%,49.999%,51%,58.999%,61%,68.999%,71%,85.999%,96%,100% {
+        opacity:0.99; text-shadow: 0 0 80px red,0 0 30px FireBrick,0 0 6px DarkRed;
+    }
+    19%,22.99%,32%,36.999%,45%,45.999%,50%,50.99%,59%,60.999%,69%,70.999%,86%,95.999% { 
+        opacity:0.4; text-shadow: none; 
+    }
+}
+
+.sitemap-notfound h1,h2 { text-align: center; color: #dedede;}
+
+.back::before {
+    position: relative;
+    content: "";
+    display: inline-block;
+    width: 0.6em;
+    height: 0.6em;
+    border-right: 0.12em solid #dedede;
+    border-top: 0.12em solid #dedede;
+    transform: rotate(-135deg);
+    margin-right: 0.2em;
+}
+.back:hover::before {
+    border-color: #aaaaaa;
+}
+.back:hover{
+    cursor: pointer;
+    color: #aaaaaa;
 }

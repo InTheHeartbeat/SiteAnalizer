@@ -1,0 +1,84 @@
+﻿@using SiteAnalyzer.Base
+@using SiteAnalyzer.Scanning
+@model SiteAnalyzer.Models.DetailedResultDataModel
+
+@{
+    ViewBag.Title = "Detailed Scan Result";
+}
+
+@section Styles{
+    <link rel="Stylesheet" href="@Href("~/Content/Site.css")" />
+    <link rel="Stylesheet" href="@Href("~/Content/ResultViewStyle.css")" />
+}
+
+<script type="text/javascript">
+    $(".navbar").removeClass("navbar-default");
+    $(".navbar").addClass("navbar-inverse");
+</script>
+
+<div class="sidebar">
+    <ul>
+        <li>
+            <a href="@Url.Action("ViewResult", new { url = Model.Site.Url })"><span class="sp-btn glyphicon glyphicon glyphicon-dashboard" aria-hidden="true"></span></a>
+        </li>
+        <li class="active">
+            <a href="@Url.Action("ViewDetailedResult", new { url = Model.Site.Url })"><span class="sp-btn glyphicon glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
+        </li>
+        <li>
+            <a href="@Url.Action("Index")"><span class="sp-btn glyphicon glyphicon-menu-left" aria-hidden="true"></span></a>
+        </li>
+    </ul>
+</div>
+
+<div class="container-fluid" id="view-result-container">
+    <div class="row">
+        <div id="inf-cell-url" class="infographics-cell">
+            <div class="inf-block-header">
+                <h4>Tested URL</h4>
+            </div>
+            <h1 class="inf-label">@Model.Site.Url</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div id="inf-cell-table" class="infographics-cell">
+            <div class="inf-block-header">
+                <h4>Per page data</h4>
+            </div>
+            <div class="table-responsive">
+                <table class="table header-fixed" align="center">
+                    <thead>
+                    <tr>
+                        <th>Sitemap</th>
+                        <th>Page</th>
+                        <th>Load Time</th>
+                        <th>Length</th>
+                        <th>Completed</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (Sitemap sitemap in Model.Site.Sitemaps)
+                    {
+                        foreach (SitemapUrl sitemapUrl in sitemap.Urls)
+                        {
+                            <tr>
+                                <td>@sitemap.Url</td>
+                                <td>@sitemapUrl.Url</td>
+                                <td class="load-time @(sitemapUrl.LoadTime.TotalMilliseconds <= 500 && sitemapUrl.LoadTime.TotalMilliseconds>0 ? "success" : sitemapUrl.LoadTime.TotalMilliseconds > 500 && sitemapUrl.LoadTime.TotalMilliseconds <= 700 ? "warning" : "danger")">@(sitemapUrl.LoadTime.TotalMilliseconds)ms</td>
+                                <td>@sitemapUrl.Lenght</td>
+                                <td>@sitemapUrl.Completed</td>
+                            </tr>
+                        }
+                    }
+                    </tbody>
+                </table>
+            </div>            
+        </div>
+    </div>
+</div>
+
+
+<style>
+    body {
+        background-color: #435d70;
+    }
+</style>

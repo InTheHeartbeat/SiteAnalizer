@@ -1,0 +1,91 @@
+﻿@using SiteAnalyzer.Models
+@using SiteAnalyzer.Scanning
+@model MainModel
+@{
+    ViewBag.Title = "Home Page";
+}
+@section Styles{
+    <link rel="Stylesheet" href="@Href("~/Content/Site.css")" />
+}
+
+<div id="url-form">
+    @using (Ajax.BeginForm("HandleUrl", "Home", new AjaxOptions { UpdateTargetId = "input-block", OnComplete = "LoadComplete()", InsertionMode = InsertionMode.Replace }))
+    {
+        <div id="input-block">
+            @Html.Partial("UrlInputBlock")
+        </div>
+    }
+</div>
+
+<div id="main-desc">
+    <div id="desc-container">
+        <h1 id="desc-1">
+            This web service gives you the opportunity<br /> to check the performance of your website<br> based on the site map
+        </h1>
+        <br />
+        @if (!Model.Tasks.Any())
+        {
+            <h1 id="desc-2">
+                You do not have any tasks yet <br>— сreate the first task!
+            </h1>
+        }
+        else
+        { <div class="table-responsive">
+                <table class="table header-fixed" align="center">
+                    <thead>
+                        <tr>
+                            <th>Site</th>
+                            <th>State</th>
+                            <th>Progress</th>
+                            <th>Total Sitemaps</th>
+                            <th>Scanned Sitemaps</th>
+                            <th>Total Addresses</th>
+                            <th>Scanned Addresses</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (SiteScanTask task in Model.Tasks)
+                        {
+                        <tr>
+                            <td>@task.Site.Url</td>
+                            <td>@task.State.ProccessState</td>
+                            <td>@(System.Math.Round((float)task.ResultState.ScannedAddresses / (float)task.ResultState.TotalAddresses) * 100.0)%</td>
+                            <td>@task.ResultState.TotalSitemaps</td>
+                            <td>@task.ResultState.ScannedSitemaps</td>
+                            <td>@task.ResultState.TotalAddresses</td>
+                            <td>@task.ResultState.ScannedAddresses</td>
+                            <td><a href="@Url.Action("ViewResult", new {url=task.Site.Url})">View</a></td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <div id="load-bar-1">
+        <div class="space">
+            <div class="ship">
+                <div class="ship-rotate">
+                    <div class="pod"></div>
+                    <div class="fuselage"></div>
+                </div>
+            </div>
+            <div class="ship-shadow"></div>
+            <div class="mars">
+                <div class="tentacle"></div>
+                <div class="flag">
+                    <div class="small-tentacle"></div>
+                </div>
+                <div class="planet">
+                    <div class="surface"></div>
+                    <div class="crater1"></div>
+                    <div class="crater2"></div>
+                    <div class="crater3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -21,24 +21,31 @@ namespace SiteAnalyzer.Controllers
         public ActionResult Index()
         {
             if (_currentModel == null)
-                _currentModel = new MainModel();
+                _currentModel = new MainModel(){Completed = false,SitemapContain = false, Tasks = ScannerProvider.Scanner.ScanTasks};
             return View(_currentModel);
         }
 
         [HttpPost]
-        public ActionResult HandleUrl(MainModel model)
+        public async Task<ActionResult> HandleUrl(MainModel model)
         {
             _currentModel = model;
-
-            ScannerProvider.Scanner.ScanSite(model.Url, false);
-            model.Completed = true;
+            _currentModel.Tasks = ScannerProvider.Scanner.ScanTasks;
+            await ScannerProvider.Scanner.ScanSite(model.Url, false);
+            model.Completed =true/* ScannerProvider.Scanner.ScanTasks.LastOrDefault().Completed*/;
+            model.SitemapContain = ScannerProvider.Scanner.ScanTasks.LastOrDefault().Site.SitemapLoaded;
             return PartialView("UrlInputBlock", _currentModel);
         }
 
         public ActionResult ViewResult(string url)
         {
-            SiteScanTask task = ScannerProvider.Scanner.ScanTasks.FirstOrDefault(s => s.Site.Url == url);
+            SiteScanTask task = ScannerProvider.Scanner.ScanTasks.LastOrDefault(s => s.Site.Url == url);
             return View("ViewResult", new ResultDataModel(task.Site, task.ResultState));
+        }
+
+        public ActionResult ViewDetailedResult(string url)
+        {
+            SiteScanTask task = ScannerProvider.Scanner.ScanTasks.LastOrDefault(s => s.Site.Url == url);
+            return View("ViewDetailedResult", new DetailedResultDataModel(task.Site));
         }
     }
 }

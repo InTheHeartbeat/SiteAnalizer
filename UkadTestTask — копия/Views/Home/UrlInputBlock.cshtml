@@ -1,0 +1,43 @@
+﻿@model SiteAnalyzer.Models.MainModel
+
+@if(!Model.Completed && !Model.SitemapContain)
+{<div id="input-group-url" class="input-group input-group-lg">
+     <span class="input-group-addon" id="basic-addon">URL</span>
+     @Html.TextBoxFor(t => Model.Url, new { @class = "form-control", placeholder = "Enter youre URL here", type = "text", aria_describedby = "basic-addon", id = "input-url" })
+     <div id="error-block" class="alert alert-danger" style="display:none"></div>
+     <span class="input-group-btn">
+         <button id="start-handle-button" class="btn btn-default" type="submit" name="url-form-action" value="scan-url">Go!</button>
+     </span>
+ </div>
+
+    <div class="progress" style="display: none">
+        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+    </div>
+
+    <div id="status"></div>
+}
+
+@if (Model.Completed && Model.SitemapContain)
+{
+    @Html.ActionLink("Completed!", "ViewResult", new {url=Model.Url}, new {id = "completedLink"}) 
+}
+
+@if (Model.Completed && !Model.SitemapContain)
+{
+    <link href='https://fonts.googleapis.com/css?family=Monoton' rel='stylesheet' type='text/css'>
+    
+    <div class="sitemap-notfound">
+        <h1>Sitemap <span style="color:FireBrick">not</span> found.</h1>
+        <div class="div404container">
+            <p id="error">E<span>r</span>ror</p>
+            <p id="code">4<span>0</span><span>4</span></p>
+        </div>
+        <h2>This may mean that the site does not have a map, it is disabled or only a certain circle of persons has access rights. Such sites are not scanned.</h2>
+    </div>    
+    <br/>
+    <a href="@Url.Action("Index")"><h2 class="back">Back</h2></a>
+    <script>
+        stopColorAnim();
+        $("body").animate({ backgroundColor: "rgb(32, 37, 39)" }, 1000);
+    </script>
+}

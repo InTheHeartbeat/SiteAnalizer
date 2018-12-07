@@ -1,0 +1,291 @@
+﻿@model SiteAnalyzer.Models.ResultDataModel
+@{
+    ViewBag.Title = "Scan result";
+}
+@section Styles{
+    <link rel="Stylesheet" href="@Href("~/Content/Site.css")" />
+    <link rel="Stylesheet" href="@Href("~/Content/ResultViewStyle.css")" />
+}
+
+<script type="text/javascript">
+    $(".navbar").removeClass("navbar-default");
+    $(".navbar").addClass("navbar-inverse");
+</script>
+<script>
+    $(document).ready(function() {
+        var g = new JustGage({
+            id: "gauge-min-load-page-time",
+            value:@Model.Result.PageLoadedMinTime.TotalMilliseconds,
+            min: 0,
+            max: @Model.Result.PageLoadedMaxTime.TotalMilliseconds,
+            title: "",
+            startAnimationTime: 3000,
+            valueFontColor: "#fff",
+            symbol: "ms",
+            gaugeWidthScale:0.8,
+            shadowSize:0,
+            shadowOpacity:0,
+            relativeGaugeSize:true,
+            pointer:true,
+            startAnimationType: "bounce"
+        });
+        var g1 = new JustGage({
+            id: "gauge-middle-load-page-time",
+            value: @Model.Result.PageLoadedMiddleTime.TotalMilliseconds,
+            min: 0,
+            max: @Model.Result.PageLoadedMaxTime.TotalMilliseconds,
+            title: "",
+            startAnimationTime: 3000,
+            valueFontColor: "#fff",
+            symbol: "ms",
+            gaugeWidthScale:0.8,
+            shadowSize:0,
+            shadowOpacity:0,
+            startAnimationType: "bounce",
+            relativeGaugeSize:true,
+            pointer:true
+        });
+        var g2 = new JustGage({
+            id: "gauge-max-load-page-time",
+            value: @Model.Result.PageLoadedMaxTime.TotalMilliseconds,
+            min: 0,
+            max: @Model.Result.PageLoadedMaxTime.TotalMilliseconds,
+            title: "",
+            startAnimationTime: 3000,
+            valueFontColor: "#fff",
+            symbol: "ms",
+            gaugeWidthScale:0.8,
+            shadowSize:0,
+            shadowOpacity:0,
+            relativeGaugeSize:true,
+            pointer:true,
+            startAnimationType: "bounce"
+        });
+
+        @{
+            int c0_20 = 0;
+            int c20_80 = 0;
+            int c80_150 = 0;
+            int c150_300 = 0;
+            int c300_350 = 0;
+            int c350_400 = 0;
+            int c400_450 = 0;
+            int c450_550 = 0;
+            int c550_650 = 0;
+            int c650_750 = 0;
+            int c750_850 = 0;
+            int c850_950 = 0;
+            int c950_1500 = 0;
+            int co1500 = 0;
+            Model.Site.Sitemaps.ForEach(s=> c0_20 += s.Urls.Count(u=>u.LoadTime.TotalMilliseconds >= 0 && u.LoadTime.TotalMilliseconds < 20));
+            Model.Site.Sitemaps.ForEach(s => c20_80 += s.Urls.Count(u => u.LoadTime.TotalMilliseconds >= 20 && u.LoadTime.TotalMilliseconds < 80));
+            Model.Site.Sitemaps.ForEach(s => c80_150 += s.Urls.Count(u => u.LoadTime.TotalMilliseconds >= 80 && u.LoadTime.TotalMilliseconds < 150));
+            Model.Site.Sitemaps.ForEach(s => c150_300 += s.Urls.Count(u => u.LoadTime.TotalMilliseconds >= 150 && u.LoadTime.TotalMilliseconds < 300));
+            Model.Site.Sitemaps.ForEach(s => c300_350 += s.Urls.Count(u => u.LoadTime.TotalMilliseconds >= 300 && u.LoadTime.TotalMilliseconds < 350));
+            Model.Site.Sitemaps.ForEach(s => c350_400 += s.Urls.Count(u => u.LoadTime.TotalMilliseconds >= 350 && u.LoadTime.TotalMilliseconds < 400));
+            Model.Site.Sitemaps.ForEach(s => c400_450 += s.Urls.Count(u => u.LoadTime.TotalMilliseconds >= 400 && u.LoadTime.TotalMilliseconds < 450));
+            Model.Site.Sitemaps.ForEach(s => c450_550 += s.Urls.Count(u => u.LoadTime.TotalMilliseconds >= 450 && u.LoadTime.TotalMilliseconds < 550));
+            Model.Site.Sitemaps.ForEach(s => c550_650 += s.Urls.Count(u => u.LoadTime.TotalMilliseconds >= 550 && u.LoadTime.TotalMilliseconds < 650));
+            Model.Site.Sitemaps.ForEach(s => c650_750 += s.Urls.Count(u => u.LoadTime.TotalMilliseconds >= 650 && u.LoadTime.TotalMilliseconds < 750));
+            Model.Site.Sitemaps.ForEach(s => c750_850 += s.Urls.Count(u => u.LoadTime.TotalMilliseconds >= 750 && u.LoadTime.TotalMilliseconds < 850));
+            Model.Site.Sitemaps.ForEach(s => c850_950 += s.Urls.Count(u => u.LoadTime.TotalMilliseconds >= 850 && u.LoadTime.TotalMilliseconds < 950));
+            Model.Site.Sitemaps.ForEach(s => c950_1500 += s.Urls.Count(u => u.LoadTime.TotalMilliseconds >= 950 && u.LoadTime.TotalMilliseconds < 1500));
+            Model.Site.Sitemaps.ForEach(s => co1500 += s.Urls.Count(u => u.LoadTime.TotalMilliseconds >= 1500));
+        }
+
+        arrayOfData = new Array(
+            [@c0_20,'0-20ms','#0091EA'],
+            [@c20_80,'20-80ms','#0091EA'],
+            [@c80_150,'80-150ms','#0091EA'],
+            [@c150_300,'150-300ms','#0091EA'],
+            [@c300_350,'300-350ms','#0091EA'],
+            [@c350_400,'350-400ms','#0091EA'],
+            [@c400_450,'400-450ms','#0091EA'],
+            [@c450_550,'450-550ms','#0091EA'],
+            [@c550_650,'550-650ms','#0091EA'],
+            [@c650_750,'650-750ms','#0091EA'],
+            [@c750_850,'750-850ms','#0091EA'],
+            [@c850_950,'850-950ms','#0091EA'],
+            [@c950_1500,'950-1500ms','#0091EA'],
+            [@co1500,'>1500ms','#0091EA']
+        );
+
+        $('#bar-chart').jqBarGraph({
+            data: arrayOfData, // array of data for your graph
+            title: false, // title of your graph, accept HTML
+            barSpace: 6, // this is default space between bars in pixels
+            width: "98%", // default width of your graph
+            height: "85%", //default height of your graph
+            color: '#000000', // if you don't send colors for your data this will be default bars color
+            colors: false, // array of colors that will be used for your bars and legends
+            lbl: '', // if there is no label in your array
+            sort: false, // sort your data before displaying graph, you can sort as 'asc' or 'desc'
+            position: 'bottom', // position of your bars, can be 'bottom' or 'top'. 'top' doesn't work for multi type
+            prefix: '', // text that will be shown before every label
+            postfix: '', // text that will be shown after every label
+            animate: true, // if you don't need animated appearance change to false
+            speed: 5, // speed of animation in seconds
+            legendWidth: 100, // width of your legend box
+            legend: false, // if you want legend change to true
+            legends: false, // array for legend. for simple graph type legend will be extracted from labels if you don't set this
+            type: false, // for multi array data default graph type is stacked, you can change to 'multi' for multi bar type
+            showValues: true, // you can use this for multi and stacked type and it will show values of every bar part
+            showValuesColor: '#fff' // color of font for values
+        });
+        $(window).resize(function() {
+            $('#bar-chart').html("");
+            $('#bar-chart').jqBarGraph({
+                data: arrayOfData, // array of data for your graph
+                title: false, // title of your graph, accept HTML
+                barSpace: 6, // this is default space between bars in pixels
+                width: "98%", // default width of your graph
+                height: "85%", //default height of your graph
+                color: '#000000', // if you don't send colors for your data this will be default bars color
+                colors: false, // array of colors that will be used for your bars and legends
+                lbl: '', // if there is no label in your array
+                sort: false, // sort your data before displaying graph, you can sort as 'asc' or 'desc'
+                position: 'bottom', // position of your bars, can be 'bottom' or 'top'. 'top' doesn't work for multi type
+                prefix: '', // text that will be shown before every label
+                postfix: '', // text that will be shown after every label
+                animate: true, // if you don't need animated appearance change to false
+                speed: 5, // speed of animation in seconds
+                legendWidth: 100, // width of your legend box
+                legend: false, // if you want legend change to true
+                legends: false, // array for legend. for simple graph type legend will be extracted from labels if you don't set this
+                type: false, // for multi array data default graph type is stacked, you can change to 'multi' for multi bar type
+                showValues: true, // you can use this for multi and stacked type and it will show values of every bar part
+                showValuesColor: '#fff' // color of font for values
+            });
+        });
+    });
+
+</script>
+
+
+<div class="sidebar">
+    <ul>
+        <li class="active">
+            <a href="@Url.Action("ViewResult", new { url = Model.Site.Url })"><span class="sp-btn glyphicon glyphicon glyphicon-dashboard" aria-hidden="true"></span></a>
+        </li>
+        <li>
+            <a href="@Url.Action("ViewDetailedResult", new { url = Model.Site.Url })"><span class="sp-btn glyphicon glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
+        </li>
+        <li>
+            <a href="@Url.Action("Index")"><span class="sp-btn glyphicon glyphicon-menu-left" aria-hidden="true"></span></a>
+        </li>
+    </ul>
+</div>
+
+<div class="container-fluid" id="view-result-container">
+    <div>
+        <div class="row">
+            <div id="inf-cell-url" class="infographics-cell">
+                <div class="inf-block-header">
+                    <h4>Tested URL</h4>
+                </div>
+                <h1 class="inf-label">@Model.Site.Url</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="inf-cells-container">
+                <div id="inf-block-site-ping" class="infographics-cell">
+                    <div class="inf-block-header">
+                        <h4>Ping</h4>
+                    </div>
+                    <h1 class="inf-label">@(Model.Result.SiteResponseTime.TotalMilliseconds)ms</h1>
+                </div>
+                <div class="infographics-cell">
+                    <div class="inf-block-header">
+                        <h4>Min load page time</h4>
+                    </div>
+                    <div class="gauge" id="gauge-min-load-page-time"></div>
+                </div>
+                <div class="infographics-cell">
+                    <div class="inf-block-header">
+                        <h4>Middle load page time</h4>
+                    </div>
+                    <div class="gauge" id="gauge-middle-load-page-time"></div>
+                </div>
+                <div class="infographics-cell">
+                    <div class="inf-block-header">
+                        <h4>Max load page time</h4>
+                    </div>
+                    <div class="gauge" id="gauge-max-load-page-time"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="inf-cells-container">
+                <div class="infographics-cell inf-wide-1-cell">
+                    <div class="inf-block-header">
+                        <h4>Bar chart</h4>
+                    </div>
+                    <div id="bar-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="inf-cells-container">
+                <div id="inf-block-site-ping" class="infographics-cell">
+                    <div class="inf-block-header">
+                        <h4>Total Scanning Spent</h4>
+                    </div>
+                    <h1 class="inf-label">@(Model.Result.TotalTimeSpentScanning.ToString(@"hh\:mm\:ss"))</h1>
+                </div>
+                <div class="infographics-cell">
+                    <div class="inf-block-header">
+                        <h4>Total Sitemaps</h4>
+                    </div>
+                    <h1 class="inf-label">@(Model.Result.TotalSitemaps)</h1>
+                </div>
+                <div class="infographics-cell">
+                    <div class="inf-block-header">
+                        <h4>Scanned Sitemaps</h4>
+                    </div>
+                    <h1 class="inf-label">@(Model.Result.ScannedSitemaps)</h1>
+                </div>
+                <div class="infographics-cell">
+                    <div class="inf-block-header">
+                        <h4>Sitemap Loading Spent</h4>
+                    </div>
+                    <h1 class="inf-label">@(Model.Result.SitemapLoadedTime.TotalMilliseconds)ms</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="inf-cells-container">
+                <div class="infographics-cell">
+                    <div class="inf-block-header">
+                        <h4>Total addresses</h4>
+                    </div>
+                    <h1 class="inf-label">@(Model.Result.TotalAddresses)</h1>
+                </div>
+                <div class="infographics-cell">
+                    <div class="inf-block-header">
+                        <h4>Scanned Addresses</h4>
+                    </div>
+                    <h1 class="inf-label">@(Model.Result.ScannedAddresses)</h1>
+                </div>
+                <div id="inf-block-site-ping" class="infographics-cell">
+                    <div class="inf-block-header">
+                        <h4>Proccessing State</h4>
+                    </div>
+                    <h1 class="inf-label">@(Model.Result.ProccessState)</h1>
+                </div>
+                <div class="infographics-cell">
+                    <div class="inf-block-header">
+                        <h4>Done</h4>
+                    </div>
+                    <h1 class="inf-label">@((Model.Result.ScannedAddresses / Model.Result.TotalAddresses) *100)%</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    body {
+        background-color: #435d70;
+    }
+</style>

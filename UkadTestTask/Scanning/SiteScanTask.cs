@@ -1,35 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using SiteAnalyzer.Base;
+using SiteAnalyzer.Scanning.Interfaces;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
-using System.Web;
-using System.Xml.Serialization;
-using SiteAnalyzer.Base;
-using SiteAnalyzer.Scanning.Interfaces;
-using WebGrease.Css.Extensions;
+using SiteAnalyzer.Scanning.Extensions;
 
 namespace SiteAnalyzer.Scanning
-{    
+{
     public class SiteScanTask : ISiteScanTask
     {
         /// <summary>
         /// Current scanning web site
         /// </summary>
-        public WebSite Site { get; set; }        
+        public WebSite Site { get; set; }
 
         /// <summary>
-        /// Result state after scanning
+        /// Result state scanning
         /// </summary>
         public ScanResult ResultState { get; private set; }
-        
-        /// <summary>
-        /// Current state
-        /// </summary>
-        public ScanState State { get; private set; }
 
         /// <summary>
         /// Occurs when call method Stop(), but not at the actual stop.
@@ -43,109 +34,141 @@ namespace SiteAnalyzer.Scanning
         /// Return true if site successful scanned
         /// </summary>       
         public bool Completed => Site != null
-                                 && Site.Sitemaps.All(t => t.Urls.All(u => u.Completed));
+                                 && (Site.Sitemaps.All(t => t.Urls.All(u => u.Completed)) || !Site.Sitemaps.Any());
 
-        private bool _cancelationPending;
+        private bool _cancellationPending;
 
         public SiteScanTask(WebSite site)
         {
             Site = site;
-            State = new ScanState();            
             ResultState = new ScanResult();
-            _cancelationPending = false;            
+            _cancellationPending = false;
         }
 
         /// <summary>
         /// Start scanning
         /// </summary>
-        public void Scan()
+        public async Task Scan()
         {
             if (Site == null)
                 throw new NullReferenceException($"Web site is null");
             if (string.IsNullOrWhiteSpace(Site.Url))
                 throw new NullReferenceException($"Web site url is null or empty");
 
-            ScanTask();
+            await RunScanTask();
         }
 
-        private async Task ScanTask()
-        {                     
-            State.ProccessState = ScanProccessState.Scanning;            
+        private async Task RunScanTask()
+        {
+            ResultState.ProccessState = ScanProccessState.Scanning;
             OnStarted();
 
-            if (!Site.SitemapLoaded)
-                LoadSitemap();
-                                  
             Stopwatch scanningTotalTimeSpent = Stopwatch.StartNew();
-            foreach (Sitemap sitemap in Site.Sitemaps)
-            {
-                foreach (SitemapUrl notScannedUrl in sitemap.Urls.Where(u => !u.Completed))
-                {
-                    if (_cancelationPending)                                            
-                        return;                    
 
-                    State.TextState = "Scanning address " + notScannedUrl.Url + "(" + State.ScannedAddresses + 1 + "/" +
-                                      State.TotalAddresses + ")";
+            ResultState.SiteResponseTime = new TimeSpan(0, 0, 0, 0, (int)await PingSite());
 
-                    SitemapUrl scannedUrl = InterviewUrl(notScannedUrl);
-                    notScannedUrl.LoadTime = scannedUrl.LoadTime;
-                    notScannedUrl.Lenght = scannedUrl.Lenght;
-                    notScannedUrl.Completed = true;
+            if (!Site.SitemapLoaded)
+                await LoadSitemap();
 
-                    ResultState.ScannedAddresses = ++State.ScannedAddresses;                                        
-                }
-                ResultState.ScannedSitemaps = ++State.ScannedSitemaps;
-            }
+            await InterviewSite(scanningTotalTimeSpent);
+
             scanningTotalTimeSpent.Stop();
             ResultState.TotalTimeSpentScanning = scanningTotalTimeSpent.Elapsed;
-
-            Site.Sitemaps.ForEach(sm => ResultState.PageLoadedMinTime = TimeSpan.FromMilliseconds(sm.Urls.Min(t => t.LoadTime.Milliseconds)));
-            Site.Sitemaps.ForEach(sm => ResultState.PageLoadedMaxTime = TimeSpan.FromMilliseconds(sm.Urls.Max(t => t.LoadTime.Milliseconds)));
-            Site.Sitemaps.ForEach(sm => ResultState.PageLoadedMiddleTime = TimeSpan.FromMilliseconds(sm.Urls.Average(t => t.LoadTime.Milliseconds)));            
+            ResultState.ProccessState = ScanProccessState.Completed;
         }
 
-        private void LoadSitemap()
+        private async Task InterviewSite(Stopwatch scanningTotalTimeSpent)
         {
-            State.TextState = "Loading sitemap";
+            foreach (Sitemap sitemap in Site.Sitemaps)
+            {
+                foreach (var notScannedUrl in sitemap.Urls.Where(u => !u.Completed))
+                {
+                    if (_cancellationPending)
+                        return;
+
+                    ResultState.TextState = "Scanning address " + notScannedUrl.Url + "(" +
+                                      (ResultState.ScannedAddresses).ToString() + "/" +
+                                      ResultState.TotalAddresses + ")";
+
+                    try
+                    {
+                        SitemapUrl scannedUrl = await InterviewUrl(notScannedUrl);
+                        notScannedUrl.LoadTime = scannedUrl.LoadTime;
+                        notScannedUrl.Lenght = scannedUrl.Lenght;
+                        notScannedUrl.Completed = true;
+                    }
+                    catch
+                    {
+                        notScannedUrl.LoadTime = TimeSpan.Zero;
+                        notScannedUrl.Lenght = -1;
+                        notScannedUrl.Completed = false;
+                    }
+
+
+                    ResultState.ScannedAddresses = ++ResultState.ScannedAddresses;
+                    ResultState.PageLoadMinTime =
+                        TimeSpan.FromMilliseconds(Site.Sitemaps.SelectMany(sm => sm.Urls).Min(url => url.LoadTime.TotalMilliseconds));
+                    ResultState.PageLoadMaxTime =
+                        TimeSpan.FromMilliseconds(Site.Sitemaps.SelectMany(sm => sm.Urls).Max(url => url.LoadTime.TotalMilliseconds));
+                    ResultState.PageLoadAverageTime =
+                        TimeSpan.FromMilliseconds(Site.Sitemaps.SelectMany(sm => sm.Urls).Average(url => url.LoadTime.TotalMilliseconds));
+                    ResultState.ETA = scanningTotalTimeSpent.GetEta(ResultState.ScannedAddresses, ResultState.TotalAddresses);
+                }
+
+                ResultState.ScannedSitemaps = ++ResultState.ScannedSitemaps;
+            }
+        }
+
+        private async Task LoadSitemap()
+        {
+            ResultState.TextState = "Loading sitemap";
 
             Stopwatch siteMapLoadTime = Stopwatch.StartNew();
-            Site.Sitemaps = (new SitemapProvider()).GetSitemapsFromUrl(Site.Url);
+            Site.Sitemaps = await (new SitemapProvider()).GetSitemapsFromUrl($"{Site.Url}/sitemap.xml");
             siteMapLoadTime.Stop();
 
             ResultState.SitemapLoadedTime = siteMapLoadTime.Elapsed;
-            ResultState.SitemapLoaded = State.SitemapLoaded = Site.SitemapLoaded;
-            ResultState.TotalSitemaps = State.TotalSitemaps = Site.Sitemaps.Count;
-            Site.Sitemaps.ForEach(t => ResultState.TotalAddresses = State.TotalAddresses += t.Urls.Count);
-            // TODO try catch
+            ResultState.SitemapLoaded = ResultState.SitemapLoaded = Site.SitemapLoaded;
+            ResultState.TotalSitemaps = ResultState.TotalSitemaps = Site.Sitemaps.Count;
+            ResultState.TotalAddresses = Site.Sitemaps.Sum(s => s.Urls.Count);
         }
 
-        private SitemapUrl InterviewUrl(SitemapUrl url)
+        private async Task<SitemapUrl> InterviewUrl(SitemapUrl url)
         {
-            using (HttpClient client = new HttpClient {BaseAddress = new Uri(url.Url)})
+            using (HttpClient client = new HttpClient())
             {
                 Stopwatch sw = Stopwatch.StartNew();
-                try
-                {
-                    string result = client.GetStringAsync("").Result;
-                    sw.Stop();
-                    url.LoadTime = sw.Elapsed;
-                    url.Lenght = result.Length;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    url.Lenght = 0;
-                    url.LoadTime = TimeSpan.Zero;
-                }
+
+                string result = await client.GetStringAsync(url.Url);
+                sw.Stop();
+                url.LoadTime = sw.Elapsed;
+                url.Lenght = result.Length;
+
+                sw.Stop();
+
                 return url;
             }
         }
 
-        public void Stop()
-        {
-            _cancelationPending = true;
-            OnStopped();
-        }
+        private async Task<long> PingSite()
+            {
+                try
+                {
+                    return (await new Ping().SendPingAsync(new Uri(Site.Url).Host)).RoundtripTime;
+                }
+                catch (Exception)
+                {
+                    ResultState.TextState = "Ping Error";
+                    ResultState.ProccessState = ScanProccessState.Stopped;
+                    return 0;
+                }
+            }
+
+            public void Stop()
+            {
+                _cancellationPending = true;
+                OnStopped();
+            }
 
 
         protected virtual void OnStopped()
